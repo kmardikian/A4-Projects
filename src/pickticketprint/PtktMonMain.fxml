@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pickticketprint.PtktMonMainController">
+   <children>
+      <ToolBar layoutX="15.0" layoutY="14.0">
+        <items>
+          <Button fx:id="btnStrMon" mnemonicParsing="false" onAction="#btnStrMonPressed" text="Stop pick ticket print monitor " />
+            <Spinner fx:id="spnPtktMon" prefHeight="22.0" prefWidth="70.0" />
+            <Label text="Run Status" />
+            <Label fx:id="lblStat" />
+            <Label text="Ptkt Printer" />
+            <ComboBox fx:id="cbPrntr" onAction="#cbPrntrAction" prefHeight="22.0" prefWidth="147.0" promptText="Select Printer" />
+            <Label text="Re-Print printer " />
+            <ComboBox fx:id="cbPrntrRptr" onAction="#cbPrntrRptrAction" prefWidth="150.0" promptText="Select Re-print printer" />
+            <Label text="Whse" />
+            <ComboBox fx:id="cbWhse" onAction="#cbWhseAction" prefWidth="150.0" promptText="Select Warehouse" />
+            <Button fx:id="btnSettings" mnemonicParsing="false" onAction="#btnSettingsClicked" text="Settings" />
+        </items>
+      </ToolBar>
+      <HBox layoutX="15.0" layoutY="50.0" spacing="5.0">
+         <children>
+            <Label text="AS400 Job Name" />
+            <Label fx:id="lblJobNam" minWidth="15.0" text=" " />
+            <Label text="User" />
+            <Label fx:id="lblJobUsr" minWidth="20.0" text=" " />
+            <Label text="Job Number" />
+            <Label fx:id="lblJobNum" minWidth="15.0" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" styleClass="mainFxmlClass" stylesheets="@../res/appCss.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ptktFilter.PtktFilterController">
+   <VBox layoutX="10.0" layoutY="10.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <children>
+          <GridPane hgap="10.0" VBox.vgrow="ALWAYS">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="0.0" prefWidth="135.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="135.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="135.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="135.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="135.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                              <RowConstraints maxHeight="100.0" minHeight="80.0" prefHeight="80.0" vgrow="ALWAYS" />
+                              <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Pick Ticket Range" GridPane.rowIndex="1" />
+                              <Label text="Order Range" GridPane.rowIndex="2" />
+                              <Label text="Select Sold to's " GridPane.rowIndex="3" />
+                              <Label text="Select Ship via's" GridPane.rowIndex="5" />
+                              <Label text="Select Warehouse" GridPane.rowIndex="7" />
+                              <JFXTextField fx:id="txtFrmPtkt" promptText="From Pick Ticket" unFocusColor="#0ed3c2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <JFXTextField fx:id="txtToPtkt" promptText="To Pick ticket" unFocusColor="#0ed3c2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <JFXTextField fx:id="txtFrmOrd" prefHeight="22.0" prefWidth="102.0" promptText="From Order" unFocusColor="#0ed3c2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <JFXTextField fx:id="txtToOrd" promptText="To Order" unFocusColor="#0ed3c2" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <JFXTextField fx:id="txtSoldTo1" promptText="Sold To" unFocusColor="#0ed3c2" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <JFXTextField fx:id="txtSoldTo2" promptText="Sold To" unFocusColor="#0ed3c2" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <JFXTextField fx:id="txtSoldTo3" layoutX="333.0" layoutY="81.0" promptText="Sold To" unFocusColor="#0ed3c2" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <JFXTextField fx:id="txtSoldTo4" layoutX="437.0" layoutY="81.0" promptText="Sold To" unFocusColor="#0ed3c2" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                              <JFXTextField fx:id="txtSoldTo5" layoutX="541.0" layoutY="81.0" promptText="Sold To" unFocusColor="#0ed3c2" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                              <JFXTextField fx:id="txtSvia1" promptText="Ship Via" unFocusColor="#0ed3c2" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <JFXTextField fx:id="txtSvia2" promptText="Ship Via" unFocusColor="#0ed3c2" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                              <JFXTextField fx:id="txtSvia3" promptText="Ship Via" unFocusColor="#0ed3c2" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                              <JFXTextField fx:id="txtSvia4" promptText="Ship Via" unFocusColor="#0ed3c2" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                              <JFXTextField fx:id="txtSvia5" promptText="Ship Via" unFocusColor="#0ed3c2" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                              <Label text="Select Print Date Range" GridPane.rowIndex="8" />
+                              <DatePicker fx:id="dpFrmPrtDt" promptText="MM/DD/YYYY" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                              <DatePicker fx:id="dpToPrtDt" promptText="MM/DD/YYYY" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                              <Label text="Select Start Date Range" GridPane.rowIndex="9" />
+                              <DatePicker fx:id="dpFrmStDt" promptText="MM/DD/YYYY" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                              <DatePicker fx:id="dpToStDt" promptText="MM/DD/YYYY" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                              <JFXCheckBox fx:id="cbxPrt" onAction="#cbxPrtClicked" text="Prt" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                              <JFXCheckBox fx:id="cbxDst" prefHeight="6.0" prefWidth="82.0" text="Dis" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                              <JFXCheckBox fx:id="cbxAsg" layoutX="229.0" layoutY="181.0" text="Asg" GridPane.columnIndex="3" GridPane.rowIndex="10" />
+                              <JFXCheckBox fx:id="cbxPck" layoutX="229.0" layoutY="181.0" text="Pck" GridPane.columnIndex="4" GridPane.rowIndex="10" />
+                              <Label text="Select Status" GridPane.rowIndex="10" />
+                              <JFXCheckBox fx:id="cbxPak" text="Pak" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                              <JFXCheckBox fx:id="cbxCpu" text="cpu" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                              <JFXCheckBox fx:id="cbxWgh" text="Wgh" GridPane.columnIndex="3" GridPane.rowIndex="11" />
+                              <JFXCheckBox fx:id="cbxInv" text="Inv" GridPane.columnIndex="4" GridPane.rowIndex="11" />
+               <ListView fx:id="lvWrh" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+               <Label fx:id="lblCus1Nam" prefHeight="14.0" prefWidth="135.0" text=" " GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               <Label fx:id="lblCus3Nam" layoutX="315.0" layoutY="108.0" prefHeight="14.0" prefWidth="135.0" text=" " GridPane.columnIndex="3" GridPane.rowIndex="4" />
+               <Label fx:id="lblCus2Nam" prefHeight="14.0" prefWidth="135.0" text=" " GridPane.columnIndex="2" GridPane.rowIndex="4" />
+               <Label fx:id="lblCus4Nam" layoutX="460.0" layoutY="108.0" prefHeight="14.0" prefWidth="135.0" text=" " GridPane.columnIndex="4" GridPane.rowIndex="4" />
+               <Label fx:id="lblCus5Nam" layoutX="605.0" layoutY="108.0" prefHeight="14.0" prefWidth="135.0" text=" " GridPane.columnIndex="5" GridPane.rowIndex="4" />
+               <Label fx:id="lblSvia1" prefHeight="14.0" prefWidth="134.0" text=" " GridPane.columnIndex="1" GridPane.rowIndex="6" />
+               <Label fx:id="lblSvia2" layoutX="170.0" layoutY="168.0" prefHeight="14.0" prefWidth="134.0" text=" " GridPane.columnIndex="2" GridPane.rowIndex="6" />
+               <Label fx:id="lblSvia3" layoutX="315.0" layoutY="168.0" prefHeight="14.0" prefWidth="134.0" text=" " GridPane.columnIndex="3" GridPane.rowIndex="6" />
+               <Label fx:id="lblSvia4" layoutX="460.0" layoutY="168.0" prefHeight="14.0" prefWidth="134.0" text=" " GridPane.columnIndex="4" GridPane.rowIndex="6" />
+               <Label fx:id="lblSvia5" layoutX="605.0" layoutY="168.0" prefHeight="14.0" prefWidth="134.0" text=" " GridPane.columnIndex="5" GridPane.rowIndex="6" />
+               <Label fx:id="lblPtktMsg" prefHeight="14.0" prefWidth="280.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+               <Label fx:id="lblOrdMsg" prefHeight="14.0" prefWidth="280.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ctl + Mouse click to select multiple Warehouses" wrappingWidth="139.24853515625" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+               <Label fx:id="lblPrtDtMsg" prefHeight="14.0" prefWidth="284.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
+               <Label fx:id="lblStDtMsg" prefHeight="14.0" prefWidth="281.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="9" />
+                           </children>
+                        </GridPane>
+                        <Button fx:id="btnApplyFilter" mnemonicParsing="false" onAction="#btnApplyFilterClicked" text="Apply Filter" />
+      </children>
+   </VBox>
+</AnchorPane>

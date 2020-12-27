@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2018-03-27T16:43:58</date>
+  <millis>1522194238595</millis>
+  <sequence>0</sequence>
+  <logger>PtktPrt_KC</logger>
+  <level>INFO</level>
+  <class>pickticketprint.PickTicketPrint</class>
+  <method>start</method>
+  <thread>16</thread>
+  <message>Successfly signon to as400</message>
+</record>

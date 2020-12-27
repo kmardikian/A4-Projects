@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="appOptions.OptionsFXMLController">
+    <stylesheets>
+        <URL value="@/res/appCss.css" />
+    </stylesheets>
+   <children>
+      <VBox spacing="10.0">
+         <children>
+            <GridPane hgap="10.0" prefWidth="814.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.0" minWidth="10.0" prefWidth="153.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="256.0" prefWidth="313.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" prefWidth="536.0" styleClass="secHdr" text="AS400 Info" GridPane.columnSpan="2147483647">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Host" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtAs400Host" prefWidth="250.0" promptText="Host" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="UserId" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtAs400Uid" promptText="User ID" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="password" GridPane.rowIndex="3" />
+                  <TextField fx:id="txtAs400Pwd" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label text="Data Library" GridPane.rowIndex="4" />
+                  <TextField fx:id="txtAs400DtaLib" promptText="Data Library" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="Interface File library (UPSEXP) " GridPane.rowIndex="5" />
+                  <TextField fx:id="txtAs400ExpLib" promptText="Interface File (UPSEXP)  Library" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label alignment="CENTER" prefWidth="536.0" styleClass="secHdr" text="UPS INFO" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
+                  <Label text="UserId" GridPane.rowIndex="7" />
+                  <TextField fx:id="txtUpsUid" promptText="UPS User ID" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <Label text="Password" GridPane.rowIndex="8" />
+                  <TextField fx:id="txtUpsPwd" promptText="UPS Password" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                  <Label text="License" GridPane.rowIndex="9" />
+                  <TextField fx:id="txtUpsLic" promptText="Ups License" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <Label text="Shipping URL" GridPane.rowIndex="10" />
+                  <TextField fx:id="txtUpsShUrl" promptText="Shipping URL" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+                  <Label text="Void TRK URL" GridPane.rowIndex="11" />
+                  <TextField fx:id="txtUpsVodUrl" promptText="Void URL" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="11" />
+                  <Label alignment="CENTER" prefWidth="536.0" styleClass="secHdr" text="Miscellaneous" GridPane.columnSpan="2147483647" GridPane.rowIndex="19" />
+                  <Label text="Label Location" GridPane.rowIndex="20" />
+                  <TextField fx:id="txtLblLoc" promptText="UPS Label location" GridPane.columnIndex="1" GridPane.rowIndex="20" />
+                  <Button fx:id="btnLblLoc" mnemonicParsing="false" onAction="#btnLblLocClicked" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="20" />
+                  <Label text="Company Logo Location" GridPane.rowIndex="21" />
+                  <TextField fx:id="txtCmpLogoLoc" promptText="Company Logo Location" GridPane.columnIndex="1" GridPane.rowIndex="21" />
+                  <Button fx:id="btnCmpLogoLoc" mnemonicParsing="false" onAction="#btnCmpLogoLocClicked" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="21" />
+                  <Label text="Jasper Report Script Location" GridPane.rowIndex="22" />
+                  <TextField fx:id="txtJaspLoc" promptText="Jasper Report Script Location" GridPane.columnIndex="1" GridPane.rowIndex="22" />
+                  <Button fx:id="btnJaspLoc" mnemonicParsing="false" onAction="#btnJaspLocClicked" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="22" />
+                  <Label fx:id="lblAs400Host" prefHeight="14.0" prefWidth="157.0" text=" " GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <Label fx:id="lblAs400Uid" prefHeight="14.0" prefWidth="158.0" text=" " GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  <Label fx:id="lblAs400Pwd" prefHeight="11.0" prefWidth="169.0" text=" " GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <Label fx:id="lblAs400DtaLib" prefHeight="6.0" prefWidth="163.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                  <Label fx:id="lblAs400ExpLib" prefHeight="14.0" prefWidth="159.0" text=" " GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                  <Label fx:id="lblUpsUid" prefHeight="14.0" prefWidth="158.0" text=" " GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                  <Label fx:id="lblUpsPwd" prefHeight="5.0" prefWidth="158.0" text=" " GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                  <Label fx:id="lblUpsLic" text=" " GridPane.columnIndex="3" GridPane.rowIndex="9" />
+                  <Label fx:id="lblUpsShUrl" text=" " GridPane.columnIndex="3" GridPane.rowIndex="10" />
+                  <Label fx:id="lblUpsVodUrl" text=" " GridPane.columnIndex="3" GridPane.rowIndex="11" />
+                  <Label fx:id="lblLblLoc" text=" " GridPane.columnIndex="3" GridPane.rowIndex="20" />
+                  <Label fx:id="lblCmpLogoLoc" text=" " GridPane.columnIndex="3" GridPane.rowIndex="21" />
+                  <Label fx:id="lblJaspLoc" text=" " GridPane.columnIndex="3" GridPane.rowIndex="22" />
+                  <Label text="Pick Ticket (PDF) retention in days" GridPane.rowIndex="23" />
+                  <TextField fx:id="txtPdfRtn" promptText="nnn" GridPane.columnIndex="1" GridPane.rowIndex="23" />
+                  <Label fx:id="lblPdfRtn" text=" " GridPane.columnIndex="3" GridPane.rowIndex="23" />
+                  <Label alignment="CENTER" prefWidth="536.0" styleClass="secHdr" text="Fed-Ex Info" GridPane.columnSpan="2147483647" GridPane.rowIndex="12" />
+                  <Label text="Key" GridPane.rowIndex="13" />
+                  <Label text="Password" GridPane.rowIndex="14" />
+                  <Label text="Account number" GridPane.rowIndex="15" />
+                  <Label text="Meter Number " GridPane.rowIndex="16" />
+                  <Label text="Shipping URL" GridPane.rowIndex="17" />
+                  <TextField fx:id="txtFxKey" promptText="Fed-Ex Key" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                  <TextField fx:id="txtFxPwd" promptText="Fed-Ex key" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+                  <TextField fx:id="txtFxAcctNo" promptText="Fed-Ex Account number" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+                  <TextField fx:id="txtFxMeterNo" promptText="Fed-Ex Meter Number" GridPane.columnIndex="1" GridPane.rowIndex="16" />
+                  <TextField fx:id="txtFxShUrl" promptText="Fed-Ex  Shipping URL" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="17" />
+                  <Label text="Label Location" GridPane.rowIndex="18" />
+                  <TextField fx:id="txtFxLblLoc" promptText="Fedex Label Location" GridPane.columnIndex="1" GridPane.rowIndex="18" />
+               </children>
+            </GridPane>
+          <Button fx:id="btnAccept" mnemonicParsing="false" onAction="#btnAcceptClicked" text="Accept">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+         <padding>
+            <Insets left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -7,11 +7,14 @@ package pickticketprint;
 
 import UPS.UpsResponse;
 import UPS.CreateUpsLabel;
+import UPS.LblRspStat;
 import UPS.VoidTracking;
 import com.a4.utils.ConnectAs400;
 import com.fedex.ship.stub.CustomerReferenceType;
 import com.fedex.ship.stub.DropoffType;
 import com.fedex.ship.stub.LinearUnits;
+import com.fedex.ship.stub.NotificationEventType;
+import com.fedex.ship.stub.NotificationSeverityType;
 import com.fedex.ship.stub.PaymentType;
 import com.fedex.ship.stub.WeightUnits;
 import fedexshipclient.FedexResponse;
@@ -37,6 +40,7 @@ import java.util.logging.Logger;
 import prtPtkt.PrintPtkt;
 import fedexshipclient.FedexShipClient;
 import fedexshipclient.FedexShipmentRequest;
+import fedexshipclient.FxAppParms;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +55,6 @@ public class RequestedPickTickets {
     private final UpsShprParms parms;
     private final PrintPtkt ptktPrint;
     private final SvcRtn svcRtn;
-    private final FedexShipClient fedexShipClient = new FedexShipClient();
 
     ;
 
@@ -309,11 +312,6 @@ public class RequestedPickTickets {
                             + ptktData.getPtktNo() + " " + ex);
                 }
 
-                if (rs.getString("").equals("F")) {  //Ship via = Fedex
-                    ptktData.setSvcCd(rs.getString("PKFXSVCD"));
-                    callFedexShip(ptktData);
-
-                }
                 ptktData.setPtktDat(wDate);
                 lbl = " ";
                 trkNo = " ";
@@ -322,7 +320,12 @@ public class RequestedPickTickets {
                 if (!rs.getBigDecimal("CHTOTQ").equals(BigDecimal.ZERO)) {
                     if (!ptktData.getSvcCd().trim().isEmpty()) {
                         //upsResponse = CreateUpsLabel.createUpsLabel(parms, ptktData);
-                        upsResponse = createUpsLabel.createUpsLabel(parms, ptktData);
+                        if (rs.getString("PKSVCD").equals("F")) {  //Ship via = Fedex
+                            ptktData.setSvcCd(rs.getString("PKFXSVCD").trim());
+                            upsResponse = callFedexShip(ptktData);
+                        } else {
+                            upsResponse = createUpsLabel.createUpsLabel(parms, ptktData);
+                        }
                         if (upsResponse.getLblRspStat().getErrStat().equals("1")) {
                             lbl = upsResponse.getLblLoc();
                             trkNo = upsResponse.getTrkNo();
@@ -345,7 +348,7 @@ public class RequestedPickTickets {
                         reprint = true;
                     }
                     //test 12/17
-                    upsResponse.setLblLoc("C:\\Users\\khatchik\\1643458_2097630_1.gif");
+//                    upsResponse.setLblLoc("C:\\Users\\khatchik\\1643458_2097630_1.gif");
                     // end test 12/17
                     ptktPrint.print(ptktData, upsResponse, reprint);
                 }
@@ -383,8 +386,18 @@ public class RequestedPickTickets {
 
     }
 
-    private void callFedexShip(PtktData ptktData) {
-        FedexShipClient fedexClient = new FedexShipClient();
+    private UpsResponse callFedexShip(PtktData ptktData) {
+        UpsResponse response = new UpsResponse();
+        FxAppParms fxParms = new FxAppParms();
+
+        fxParms.setAccountNumber(parms.getFxAcctNo());
+        fxParms.setEndPoint(parms.getFxUrl());
+        fxParms.setFedexLblLoc(parms.getFxLblLoc());
+        fxParms.setKey(parms.getFxKey());
+        fxParms.setMeterNumber(parms.getFxMeterNo());
+        fxParms.setPassWord(parms.getFxPassWord());
+
+        FedexShipClient fedexShipClient = new FedexShipClient(fxParms, AppParms.getLogger());
         FedexShipmentRequest fedexRequest = new FedexShipmentRequest();
         fedexRequest.setShipperComp(ptktData.getShpFrmNam());
         fedexRequest.setShipperName(ptktData.getShprDspName());
@@ -420,8 +433,10 @@ public class RequestedPickTickets {
         if (ptktData.getBillOpt().equals("3")) {
             fedexRequest.setPayorAcctNo(ptktData.getPyrShprNo());
             fedexRequest.setPayorCountry(ptktData.getPyrCntr());
+            fedexRequest.setPaymentType(PaymentType.THIRD_PARTY);
         } else {
             fedexRequest.setPaymentType(PaymentType.SENDER);
+            fedexRequest.setPayorAcctNo(ptktData.getShprShprNo());
         }
         fedexRequest.setPkgWeight(FedexShipClient.fmtWeight(ptktData.getCmdWgt(), WeightUnits.LB));
         fedexRequest.setPkgDim(FedexShipClient.fmtDim(ptktData.getDimLen(), ptktData.getDimWid(), ptktData.getDimHt(), LinearUnits.IN));
@@ -429,7 +444,30 @@ public class RequestedPickTickets {
         fedexRequest.getCustomerReference().add(FedexShipClient.fmtCustomerReference(CustomerReferenceType.CUSTOMER_REFERENCE, ptktData.getRefPtkt()));
         fedexRequest.setPtkt(ptktData.getPtktNo());
         fedexRequest.setCrtnId(ptktData.getCrtnId());
+        
+        fedexRequest.setRecPhone("9XXXXXXX21");
         FedexResponse fedexResponse = FedexShipClient.requestShipment(fedexRequest);
+
+        response.setBlgWgt(fedexResponse.getBlgWgt());
+        response.setLblLoc(fedexResponse.getLblLoc());
+        response.setNgsChrg(fedexResponse.getNgsChrg());
+        response.setSvcChrg(fedexResponse.getSvcChrg());
+        response.setTotChrg(fedexResponse.getTotChrg());
+        response.setTpxChrg(fedexResponse.getTpxChrg());
+        response.setTrkNo(fedexResponse.getTrkNo());
+        LblRspStat lblRspStat = new LblRspStat();
+
+        if (fedexResponse.getMsgSeverity().equals(NotificationSeverityType.SUCCESS )||
+                fedexResponse.getMsgSeverity().equals(NotificationSeverityType.WARNING)  ||
+                fedexResponse.getMsgSeverity().equals(NotificationSeverityType.NOTE)) {
+            lblRspStat.setErrStat("1");
+        } else {
+            lblRspStat.setErrCode(fedexResponse.getMsgSeverity());
+            lblRspStat.setErrMsg(fedexResponse.getMessage());
+        }
+        response.setLblRspStat(lblRspStat);
+
+        return response;
     }
 
     private void updCrtn(BigDecimal ptkt, BigDecimal crtn, String trkNo,

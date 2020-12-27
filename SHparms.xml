@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_60" class="java.beans.XMLDecoder">
+ <object class="pickticketprint.UpsShprParms">
+  <void property="as400Lib">
+   <string>TSTDBASE</string>
+  </void>
+  <void property="as400Password">
+   <string>ACSINC</string>
+  </void>
+  <void property="as400SystemName">
+   <string>10.100.100.1</string>
+  </void>
+  <void property="as400UserId">
+   <string>ACSINC</string>
+  </void>
+  <void property="cmpLogoLoc">
+   <string>c:\users\khatchik</string>
+  </void>
+  <void property="jasperLoc">
+   <string>C:\Users\Khatchik\JaspersoftWorkspace\MyReports</string>
+  </void>
+  <void property="printerName">
+   <string>CANON UPSTAIRS</string>
+  </void>
+  <void property="shLicense">
+   <string>3D362A39E035F31D</string>
+  </void>
+  <void property="shPassWord">
+   <string>Tanman96!</string>
+  </void>
+  <void property="shUrl">
+   <string>https://wwwcie.ups.com/rest/Ship</string>
+  </void>
+  <void property="shUserId">
+   <string>erindiebold2</string>
+  </void>
+  <void property="upsExpLib">
+   <string>TSTDBASE</string>
+  </void>
+  <void property="upsLblLoc">
+   <string>C:\Users\Khatchik\Dropbox\Folder shared with khatchik\UpsShipper\Labels</string>
+  </void>
+  <void property="voidUrl">
+   <string>https://wwwcie.ups.com/rest/Void</string>
+  </void>
+  <void property="whse">
+   <string>VN</string>
+  </void>
+ </object>
+</java>

@@ -1,0 +1,98 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+
+}
+/*
+toolbar label
+*/
+.secHdr {
+    -fx-background-color: #80ddc3; 
+    -fx-font: 12px "System"; 
+}
+ 
+.numColumn { 
+  -fx-alignment: center-right; 
+} 
+.text-field.error {
+    -fx-text-box-border: red;
+    -fx-text-fill: red;
+}
+.label.error{
+    -fx-text-fill: red;
+}
+.jfx-date-picker.error {
+    -fx-border-color: red;
+    -fx-text-fill: red;
+}
+.selCell:hover {
+    -fx-background-color: #80ddc3;
+    
+}
+.table-row-cellSel:hover{
+    -fx-background-color: #80ddc3;
+}
+/*.table-row-cell:hover{
+    -fx-background-color: #80ddc3;
+} */
+.data0.chart-pie {
+    -fx-pie-color: #c67e66;
+} 
+.data1.chart-pie {
+    -fx-pie-color: #0ed3c2;
+} 
+.data2.chart-pie {
+    -fx-pie-color: #8ec466;
+} 
+.data3.chart-pie {
+    -fx-pie-color: #c34d09;
+} 
+.data4.chart-pie {
+    -fx-pie-color: #7d66c4;
+} 
+.data5.chart-pie {
+    -fx-pie-color: #c215a3;
+} 
+.data6.chart-pie {
+    -fx-pie-color: #c39d15;
+} 
+.data7.chart-pie {
+    -fx-pie-color: #009973;
+}
+
+.default-color0.chart-bar {
+    -fx-bar-fill: #c67e66; 
+}
+.default-color1.chart-bar {
+    -fx-bar-fill: #0ed3c2 
+}
+.default-color2.chart-bar {
+    -fx-bar-fill: #8ec466;
+}
+.default-color3.chart-bar {
+    -fx-bar-fill: #c34d09;
+}
+.default-color4.chart-bar {
+    -fx-bar-fill: #7d66c4;
+}
+.default-color5.chart-bar {
+    -fx-bar-fill: #c215a3;
+}
+.default-color6.chart-bar {
+    -fx-bar-fill: #c39d15;
+}
+.default-color7.chart-bar {
+    -fx-bar-fill: #009973;
+}
+.table-view .column-header .label{
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+
+
+/* .cell :hover {
+    -fx-background-color: #80ddc3; 
+}
+*/
