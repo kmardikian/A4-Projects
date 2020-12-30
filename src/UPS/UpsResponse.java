@@ -19,6 +19,7 @@ public class UpsResponse {
     private BigDecimal ngsChrg;     // negotiated charges
     private BigDecimal blgWgt;      // billing weight
     private String trkNo;           // tracking no
+    private String trkTyp;           // tracking type
     //private byte[] lblImage;        // label image
     private String lblImage;
     private String lblLoc;
@@ -78,6 +79,14 @@ public class UpsResponse {
 
     public String getTrkNo() {
         return trkNo;
+    }
+
+    public String getTrkTyp() {
+        return trkTyp;
+    }
+
+    public void setTrkTyp(String trkTyp) {
+        this.trkTyp = trkTyp;
     }
 
     public void setTrkNo(String trkNo) {

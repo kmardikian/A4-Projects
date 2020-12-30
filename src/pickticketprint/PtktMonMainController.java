@@ -253,7 +253,7 @@ public class PtktMonMainController implements Initializable {
             //stage.getIcons().add(new Image(getClass().getResourceAsStream("/res/filter+.png")));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Settings");
-            appOpt.setIntParm(parm, stage);
+            appOpt.setIntParm(parm, stage, this);
             stage.setScene(new Scene(optRoot));
             svcMonPtktReq.cancel();
             stage.setOnCloseRequest(e -> {
@@ -266,6 +266,14 @@ public class PtktMonMainController implements Initializable {
 
         } catch (IOException ex) {
             Logger.getLogger(PtktMonMainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void restartMon() {
+        if (autoMon) {
+            svcMonPtktReq.restart();
+            btnStrMon.setText(STP_AUTO_MON);
         }
 
     }
@@ -292,7 +300,7 @@ public class PtktMonMainController implements Initializable {
                 @Override
                 protected SvcRtn call() throws Exception {
                     SvcRtn svcRtn = new SvcRtn();
-                    
+
                     reqPtkt.rtvCrtnData();
                     svcRtn = reqPtkt.getSvcRtn();
                     reqPtkt.voidCartons();

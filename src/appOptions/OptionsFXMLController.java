@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import pickticketprint.PtktMonMainController;
 import pickticketprint.UpsShprParms;
 
 /**
@@ -145,6 +146,7 @@ public class OptionsFXMLController implements Initializable {
 
     private Stage curStage;
     private UpsShprParms upsParm;
+    private PtktMonMainController ptktMonMainController;
 
     @FXML
     void btnAcceptClicked(ActionEvent event) {
@@ -187,6 +189,9 @@ public class OptionsFXMLController implements Initializable {
             upsParm.setFxPassWord(txtFxPwd.getText());
             upsParm.setFxUrl(txtFxShUrl.getText());
             upsParm.setFxLblLoc(txtFxLblLoc.getText());
+            this.ptktMonMainController.restartMon();
+            Stage stage = (Stage) btnAccept.getScene().getWindow();
+            stage.close();
         }
 
     }
@@ -321,7 +326,7 @@ public class OptionsFXMLController implements Initializable {
         });
     }
 
-    public void setIntParm(UpsShprParms upsParm, Stage stage) {
+    public void setIntParm(UpsShprParms upsParm, Stage stage, PtktMonMainController ptktMonMainController) {
         this.upsParm = upsParm;
         this.curStage = stage;
         txtAs400Host.setText(this.upsParm.getAs400SystemName());
@@ -344,6 +349,7 @@ public class OptionsFXMLController implements Initializable {
         txtCmpLogoLoc.setText(this.upsParm.getCmpLogoLoc());
         txtJaspLoc.setText(this.upsParm.getJasperLoc());
         txtPdfRtn.setText(String.valueOf(this.upsParm.getPtktRtnDays()));
+        this.ptktMonMainController = ptktMonMainController;
         edtAs400Host();
         edtAs400Uid();
         edtAs400Pwd();

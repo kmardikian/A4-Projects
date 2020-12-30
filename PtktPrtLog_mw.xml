@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2020-12-24T17:34:32</date>
-  <millis>1608860072492</millis>
+  <date>2020-12-29T16:59:54</date>
+  <millis>1609289994733</millis>
   <sequence>0</sequence>
   <logger>PtktPrt_mw</logger>
   <level>INFO</level>
@@ -11,16 +11,6 @@
   <method>start</method>
   <thread>17</thread>
   <message>Successfly signon to as400 
- JobName=920385/QUSER/QZDASOINIT</message>
+ JobName=950450/QUSER/QZDASOINIT</message>
 </record>
-<record>
-  <date>2020-12-24T17:35:43</date>
-  <millis>1608860143887</millis>
-  <sequence>1</sequence>
-  <logger>PtktPrt_mw</logger>
-  <level>SEVERE</level>
-  <class>fedexshipclient.FedexShipClient</class>
-  <method>printNotifications</method>
-  <thread>28</thread>
-  <message>Error retrieving Fed-Ex data sverity = WARNING pick ticket = 517669 carton = 1150002 message = Unable to obtain courtesy rates.</message>
-</record>
+</log>

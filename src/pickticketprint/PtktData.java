@@ -127,6 +127,9 @@ public class PtktData {
     private int crtnSeqNo;  // Carton # 1 of n
     private boolean mailInno=false;  // mail innovation flag 
     private String fxSvcTyp;
+    private String pkCrCd;      // pick ticket carrier code.
+    private String trkIdType;
+    private String trkId;               // tracking number for deleting 
 
     public String getShprName() {
         if (shprName ==null ) {
@@ -912,6 +915,30 @@ public class PtktData {
 
     public void setFxSvcTyp(String fxSvcTyp) {
         this.fxSvcTyp = fxSvcTyp;
+    }
+
+    public String getPkCrCd() {
+        return pkCrCd;
+    }
+
+    public void setPkCrCd(String pkCrCd) {
+        this.pkCrCd = pkCrCd;
+    }
+
+    public String getTrkIdType() {
+        return trkIdType;
+    }
+
+    public void setTrkIdType(String trkIdType) {
+        this.trkIdType = trkIdType;
+    }
+
+    public String getTrkId() {
+        return trkId;
+    }
+
+    public void setTrkId(String trkId) {
+        this.trkId = trkId;
     }
     
     

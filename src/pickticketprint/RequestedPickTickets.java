@@ -80,7 +80,7 @@ public class RequestedPickTickets {
         Date wDate;
         String qry = "Select "
                 + "a.CHPCK#, a.CHCAR#,CHPUCC,CHCWGT,CHTOTQ, "
-                + "CHPCKC,CHTRK,CHRQPTFL,CHCSEQ,h.chCnt,"
+                + "CHPCKC,CHTRK,CHRQPTFL,CHCSEQ,CHCRCD,CHSVCD,h.chCnt,"
                 + "SH2NAM,SH2CON, SH2AD1, SH2AD2, SH2CTY, SH2STT,"
                 + "SH2ZIP, SH2PHN, SH2REF1, SH2REF2,SH2REF3,"
                 + "SH2EML, FEDBDY, SH2BTIN, SH2SHPR,"
@@ -97,7 +97,7 @@ public class RequestedPickTickets {
                 //  + "EPDLNG, EPDWID, EPDHGT, EPDDUM ,"
                 + "ifnull(c.cnDes, ' ') as BXDIM, "
                 + "PKHSOL,PKHVIA,PKHPDT,PKHPTM,PKUPSVCD, ORORD,ORPO#,"
-                + "PKOSVCD,PKSVCD,PKFXSVCD,oroty"
+                + "PKCRCD,PKFXSVCD,oroty"
                 + ",ORDTE,ORSDT,ORTDT,orsi1,orsi2,orsi3,orsi4,orsi5,orsi6,"
                 + "f.CNDES as OR_TERM,ORREM, substring(g.cnDes,1,30) as SVIAD "
                 + ",ifnull(i.cndes,' ') as SVIA@V "
@@ -215,6 +215,8 @@ public class RequestedPickTickets {
                 ptktData.setCrtnCnt(rs.getInt("CHCNT"));
                 //ptktData.setCrtnSeqNo(++crtnSeq);
                 ptktData.setCrtnSeqNo(rs.getBigDecimal("CHCSEQ").intValue());
+                ptktData.setTrkIdType(rs.getString("CHSVCD"));
+                ptktData.setTrkId(rs.getString("CHTRK"));
                 ptktData.setCmdPkgTypCd("CTN");
 
                 ptktData.setPkgTyp("02");       // 02 = cusomer suppplied
@@ -253,7 +255,8 @@ public class RequestedPickTickets {
                 ptktData.setSoZip(rs.getString("SH2SOZIP"));
                 ptktData.setSoCntr(rs.getString("SH2SOCNTR"));
                 ptktData.setSoEml(rs.getString("SH2SOEML"));
-                ptktData.setSoPh(rs.getString("SH2SOPH"));
+                ptktData.setSoPh(rs.getString("SH2SOPH")); 
+                ptktData.setPkCrCd(rs.getString("PKCRCD"));
                 orSi.add(rs.getString("ORSI1"));
                 orSi.add(rs.getString("ORSI2"));
                 orSi.add(rs.getString("ORSI3"));
@@ -299,9 +302,13 @@ public class RequestedPickTickets {
                 }
 
                 if (!rs.getString("CHTRK").trim().isEmpty()) {
+                    if (rs.getString("CHCRCD").equals("F")) {
+                        callFedexVoidShp(ptktData);
+                    } else {
                     voidTrkUpsExp(rs.getString("CHTRK"));
+                    }
                     VoidTracking.voidTracking(parms, rs.getString("CHTRK").trim());
-                }
+                    }
                 try {
                     wDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(
                             new DecimalFormat("00000000").format(rs.getBigDecimal("PKHPDT"))
@@ -320,11 +327,12 @@ public class RequestedPickTickets {
                 if (!rs.getBigDecimal("CHTOTQ").equals(BigDecimal.ZERO)) {
                     if (!ptktData.getSvcCd().trim().isEmpty()) {
                         //upsResponse = CreateUpsLabel.createUpsLabel(parms, ptktData);
-                        if (rs.getString("PKSVCD").equals("F")) {  //Ship via = Fedex
+                        if (rs.getString("PKCRCD").equals("F")) {  //Ship via = Fedex
                             ptktData.setSvcCd(rs.getString("PKFXSVCD").trim());
                             upsResponse = callFedexShip(ptktData);
                         } else {
                             upsResponse = createUpsLabel.createUpsLabel(parms, ptktData);
+                            upsResponse.setTrkTyp(ptktData.getSvcCd());
                         }
                         if (upsResponse.getLblRspStat().getErrStat().equals("1")) {
                             lbl = upsResponse.getLblLoc();
@@ -352,19 +360,21 @@ public class RequestedPickTickets {
                     // end test 12/17
                     ptktPrint.print(ptktData, upsResponse, reprint);
                 }
+                 
                 updCrtn(rs.getBigDecimal("CHPCK#"),
                         rs.getBigDecimal("CHCAR#"), trkNo,
-                        lblMsg);
+                        lblMsg, ptktData.getPkCrCd(), upsResponse.getTrkTyp());
 
                 if (upsResponse.getLblRspStat().getErrStat().equals("1")) {
                     updUpsExp(ptktData, upsResponse);
+//                    updpxHdr(ptktData);
                 }
 
             }
 
         } catch (SQLException ex) {
-            AppParms.getLogger().log(Level.SEVERE, "Error retreiving PTKT Data. "
-                    + ex.getLocalizedMessage() + " SqlState =" + ex.getSQLState());
+            AppParms.getLogger().log(Level.SEVERE, "Error retreiving PTKT Data. {0} SqlState ={1}", 
+                    new Object[]{ex.getLocalizedMessage(), ex.getSQLState()});
             //Logger.getLogger(RequestedPickTickets.class.getName()).log(Level.SEVERE, null, ex);
             svcRtn.setFatalErr(true);
             svcRtn.setErrMsg("SQL Error retreiving Pick ticket Data. \n"
@@ -388,14 +398,14 @@ public class RequestedPickTickets {
 
     private UpsResponse callFedexShip(PtktData ptktData) {
         UpsResponse response = new UpsResponse();
-        FxAppParms fxParms = new FxAppParms();
+        FxAppParms fxParms = setFxAppParms();
 
-        fxParms.setAccountNumber(parms.getFxAcctNo());
-        fxParms.setEndPoint(parms.getFxUrl());
-        fxParms.setFedexLblLoc(parms.getFxLblLoc());
-        fxParms.setKey(parms.getFxKey());
-        fxParms.setMeterNumber(parms.getFxMeterNo());
-        fxParms.setPassWord(parms.getFxPassWord());
+//        fxParms.setAccountNumber(parms.getFxAcctNo());
+//        fxParms.setEndPoint(parms.getFxUrl());
+//        fxParms.setFedexLblLoc(parms.getFxLblLoc());
+//        fxParms.setKey(parms.getFxKey());
+//        fxParms.setMeterNumber(parms.getFxMeterNo());
+//        fxParms.setPassWord(parms.getFxPassWord());
 
         FedexShipClient fedexShipClient = new FedexShipClient(fxParms, AppParms.getLogger());
         FedexShipmentRequest fedexRequest = new FedexShipmentRequest();
@@ -455,11 +465,12 @@ public class RequestedPickTickets {
         response.setTotChrg(fedexResponse.getTotChrg());
         response.setTpxChrg(fedexResponse.getTpxChrg());
         response.setTrkNo(fedexResponse.getTrkNo());
+        response.setTrkTyp(fedexResponse.getTrkTyp());
         LblRspStat lblRspStat = new LblRspStat();
 
-        if (fedexResponse.getMsgSeverity().equals(NotificationSeverityType.SUCCESS )||
-                fedexResponse.getMsgSeverity().equals(NotificationSeverityType.WARNING)  ||
-                fedexResponse.getMsgSeverity().equals(NotificationSeverityType.NOTE)) {
+        if (fedexResponse.getMsgSeverity().equals(NotificationSeverityType._SUCCESS )||
+                fedexResponse.getMsgSeverity().equals(NotificationSeverityType._WARNING)  ||
+                fedexResponse.getMsgSeverity().equals(NotificationSeverityType._NOTE)) {
             lblRspStat.setErrStat("1");
         } else {
             lblRspStat.setErrCode(fedexResponse.getMsgSeverity());
@@ -469,9 +480,32 @@ public class RequestedPickTickets {
 
         return response;
     }
+    private void callFedexVoidShp(PtktData ptktData) {
+        FedexResponse response = new FedexResponse();
+        FxAppParms fxParms = setFxAppParms(); 
+        FedexShipClient fedexShipClient = new FedexShipClient(fxParms, AppParms.getLogger());
+        FedexShipmentRequest fedexRequest = new FedexShipmentRequest();
+        fedexRequest.setTrkId(ptktData.getTrkId());
+        fedexRequest.setTrkIdType(ptktData.getTrkIdType());
+        response = FedexShipClient.requestDeleteShipment(fedexRequest);
+        
+    }
+    private FxAppParms setFxAppParms() {
+        FxAppParms fxParms = new FxAppParms();
+
+        fxParms.setAccountNumber(parms.getFxAcctNo());
+        fxParms.setEndPoint(parms.getFxUrl());
+        fxParms.setFedexLblLoc(parms.getFxLblLoc());
+        fxParms.setKey(parms.getFxKey());
+        fxParms.setMeterNumber(parms.getFxMeterNo());
+        fxParms.setPassWord(parms.getFxPassWord());
+        
+        return fxParms;
+        
+    }
 
     private void updCrtn(BigDecimal ptkt, BigDecimal crtn, String trkNo,
-            String rspMsg) {
+            String rspMsg, String pkCrCd, String svCd) {
         BigDecimal curDt_cymd;
         BigDecimal curTm;
         DateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -482,7 +516,7 @@ public class RequestedPickTickets {
 
         String qry = "Update " + dtaLib + ".ccarph a "
                 + "set CHRQPTFL = ? , CHTRK =?, CHPTPRDT = ? , CHPTPRMT = ? "
-                + ",CHUERR=?"
+                + ",CHUERR=?, CHCRCD=?, CHSVCD=? "
                 + "where CHPCK# = ? "
                 + "and CHCAR# = ?";
         try (PreparedStatement pStmt = con.prepareStatement(qry);) {
@@ -495,8 +529,10 @@ public class RequestedPickTickets {
             } else {
                 pStmt.setString(5, rspMsg);     // UPS error  
             }
-            pStmt.setBigDecimal(6, ptkt);
-            pStmt.setBigDecimal(7, crtn);
+            pStmt.setString(6,pkCrCd);
+            pStmt.setString(7, svCd);
+            pStmt.setBigDecimal(8, ptkt);
+            pStmt.setBigDecimal(9, crtn);
             pStmt.executeUpdate();
         } catch (SQLException ex) {
             AppParms.getLogger().log(Level.SEVERE, "Error updating carton detail. ptkt ="
@@ -524,12 +560,29 @@ public class RequestedPickTickets {
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             //Logger.getLogger(RequestedPickTickets.class.getName()).log(Level.SEVERE, null, ex);
-            AppParms.getLogger().log(Level.SEVERE, "Error writing to UPSEXP. Ptkt ="
-                    + upsResponse.getTrkNo() + " Carton=" + ptktData.getCrtnId()
+            AppParms.getLogger().log(Level.SEVERE, "Error writing to UPSEXP. Ptkt =" + ptktData.getPtktNo()
+                    + " Carton=" + ptktData.getCrtnId()
+                    + " Trk number = " + upsResponse.getTrkNo()
                     + " Weight=" + ptktData.getCmdWgt() + " totChrg=" + upsResponse.getTotChrg()
                     + ex.getLocalizedMessage() + " SqlState =" + ex.getSQLState());
         }
     }
+//    private void updpxHdr(PtktData ptktData) {
+//        String qry = "update " + dtaLib + ".pkhdrp a set PKOCRCD = ? " +
+//                "where PKHPCK = ? and pkhOrd = ?";
+//        
+//        try (PreparedStatement pstmt = con.prepareStatement(qry)) 
+//        { 
+//            pstmt.setString(1, ptktData.getPkCrCd());
+//            pstmt.setBigDecimal(2, new BigDecimal(ptktData.getPtktNo()));
+//            pstmt.setBigDecimal(3, new BigDecimal(ptktData.getOrdNo()));
+//            pstmt.execute();
+//            
+//        } catch(SQLException ex) {
+//            AppParms.getLogger().log(Level.SEVERE, "Error updating PKHDRP File. Ptkt ={0} Carton={1}{2} SqlState ={3}", 
+//                    new Object[]{ptktData.getPtktNo(), ptktData.getCrtnId(), ex.getLocalizedMessage(), ex.getSQLState()});
+//        }
+//    }
 
     private void voidTrkUpsExp(String trk) {
         String qry = "update " + parms.getUpsExpLib() + ".UPSEXP "
