@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import pickticketprint.AppParms;
 import pickticketprint.PtktMonMainController;
 import pickticketprint.UpsShprParms;
 
@@ -189,6 +190,8 @@ public class OptionsFXMLController implements Initializable {
             upsParm.setFxPassWord(txtFxPwd.getText());
             upsParm.setFxUrl(txtFxShUrl.getText());
             upsParm.setFxLblLoc(txtFxLblLoc.getText());
+            
+            AppParms.writeParmFile(upsParm);
             this.ptktMonMainController.restartMon();
             Stage stage = (Stage) btnAccept.getScene().getWindow();
             stage.close();

@@ -130,6 +130,7 @@ public class PtktData {
     private String pkCrCd;      // pick ticket carrier code.
     private String trkIdType;
     private String trkId;               // tracking number for deleting 
+    private String carrierCode;        // carrier code F= Fedex U = UPS
 
     public String getShprName() {
         if (shprName ==null ) {
@@ -940,6 +941,13 @@ public class PtktData {
     public void setTrkId(String trkId) {
         this.trkId = trkId;
     }
-    
-    
-}
+
+    public String getCarrierCode() {
+        return carrierCode;
+    }
+
+    public void setCarrierCode(String carrierCode) {
+        this.carrierCode = carrierCode;
+    }
+
+   }

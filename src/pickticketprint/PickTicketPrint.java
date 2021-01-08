@@ -52,6 +52,7 @@ public class PickTicketPrint extends Application {
         Map<String, String> namedParms;
         namedParms = getParameters().getNamed();
         parmFile = namedParms.getOrDefault("parm", dfltParm);
+        AppParms.setParmFile(parmFile);
 
         XMLDecoder decoder;
         try {
@@ -79,6 +80,7 @@ public class PickTicketPrint extends Application {
             parm.setJasperLoc("C:\\Users\\Khatchik\\JaspersoftWorkspace\\MyReports");
             parm.setUpsExpLib("TSTDBASE");
             parm.setPtktRtnDays(90);
+            AppParms.writeParmFile(parm);
         }
 
       
@@ -163,24 +165,19 @@ public class PickTicketPrint extends Application {
 
     @Override
     public void stop() {
-        //parm = ptktMainCntl.getParm();
-        //System.out.println("Stage is closing whse2 =" + parm.getPrinterName());
-        //RequestedPickTickets ptktCrtns = new RequestedPickTickets(parm);
-        // ptktCrtns.rtvCrtnData();
-        //CreateUpsLabel crtlabel = new CreateUpsLabel(parm);
-        // CreateUpsLabel.createUpsLabel(parm);
-        XMLEncoder encoder;
-
-        try {
-            System.out.println("saving parms    ");
-            encoder = new XMLEncoder(
-                    new BufferedOutputStream(
-                            new FileOutputStream(parmFile)));
-            encoder.writeObject(parm);
-            encoder.close();
-        } catch (Exception ex) {
-            AppParms.getLogger().log(Level.SEVERE, null, ex.getLocalizedMessage());
-        }
+        
+//        XMLEncoder encoder;
+//
+//        try {
+//            System.out.println("saving parms    ");
+//            encoder = new XMLEncoder(
+//                    new BufferedOutputStream(
+//                            new FileOutputStream(parmFile)));
+//            encoder.writeObject(parm);
+//            encoder.close();
+//        } catch (Exception ex) {
+//            AppParms.getLogger().log(Level.SEVERE, null, ex.getLocalizedMessage());
+//        }
 
         if (filLock != null && filLock.isValid()) {
             try {

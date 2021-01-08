@@ -50,6 +50,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label alignment="CENTER" prefWidth="536.0" styleClass="secHdr" text="AS400 Info" GridPane.columnSpan="2147483647">
@@ -117,6 +118,9 @@
                   <TextField fx:id="txtFxShUrl" promptText="Fed-Ex  Shipping URL" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="17" />
                   <Label text="Label Location" GridPane.rowIndex="18" />
                   <TextField fx:id="txtFxLblLoc" promptText="Fedex Label Location" GridPane.columnIndex="1" GridPane.rowIndex="18" />
+                  <Label text="Log File Location" GridPane.rowIndex="24" />
+                  <TextField fx:id="tstLogLoc" promptText="Log File Location" GridPane.columnIndex="1" GridPane.rowIndex="24" />
+                  <Button fx:id="btnLogLoc" mnemonicParsing="false" onAction="#btnLogLocPressed" text="Browse" GridPane.columnIndex="2" GridPane.rowIndex="24" />
                </children>
             </GridPane>
           <Button fx:id="btnAccept" mnemonicParsing="false" onAction="#btnAcceptClicked" text="Accept">

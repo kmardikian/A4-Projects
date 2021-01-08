@@ -2,15 +2,15 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2020-12-29T16:59:54</date>
-  <millis>1609289994733</millis>
+  <date>2021-01-08T10:43:42</date>
+  <millis>1610131422436</millis>
   <sequence>0</sequence>
   <logger>PtktPrt_mw</logger>
   <level>INFO</level>
   <class>pickticketprint.PickTicketPrint</class>
   <method>start</method>
-  <thread>17</thread>
+  <thread>14</thread>
   <message>Successfly signon to as400 
- JobName=950450/QUSER/QZDASOINIT</message>
+ JobName=090480/QUSER/QZDASOINIT</message>
 </record>
 </log>

@@ -13,10 +13,11 @@ import com.a4.utils.ConnectAs400;
 import com.fedex.ship.stub.CustomerReferenceType;
 import com.fedex.ship.stub.DropoffType;
 import com.fedex.ship.stub.LinearUnits;
-import com.fedex.ship.stub.NotificationEventType;
 import com.fedex.ship.stub.NotificationSeverityType;
 import com.fedex.ship.stub.PaymentType;
 import com.fedex.ship.stub.WeightUnits;
+import fedexaddrvalclient.FedexAddrResponse;
+import fedexaddrvalclient.FedexAddrValClient;
 import fedexshipclient.FedexResponse;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -196,8 +197,13 @@ public class RequestedPickTickets {
                 // ptktData.setPyrCntr(ptktData.getShprCntr());
                 // ptktData.setPyrShprNo(ptktData.getShprShprNo());
                 // ptktData.setPyrPh(ptktData.getShprPh());
+                ptktData.setCarrierCode(rs.getString("PKCRCD"));
                 ptktData.setPyrBillOpCd("40");      // 10 = prepaid; 30 = Bill to third Party; 40 = freight collect
-                ptktData.setSvcCd(rs.getString("PKUPSVCD"));  // 03 = Ground ; 01 = next day air; 02 second day air
+                if (ptktData.getCarrierCode().equals("F")) {
+                    ptktData.setSvcCd(rs.getString("PKFXSVCD"));  // fedex service code 
+                } else {
+                    ptktData.setSvcCd(rs.getString("PKUPSVCD"));  // 03 = Ground ; 01 = next day air; 02 second day air
+                }
 
                 ptktData.setRefPo(rs.getString("SH2REF2").substring(4));
                 pkRef = ptktNoFmt.format(rs.getBigDecimal("ORORD"))
@@ -255,7 +261,7 @@ public class RequestedPickTickets {
                 ptktData.setSoZip(rs.getString("SH2SOZIP"));
                 ptktData.setSoCntr(rs.getString("SH2SOCNTR"));
                 ptktData.setSoEml(rs.getString("SH2SOEML"));
-                ptktData.setSoPh(rs.getString("SH2SOPH")); 
+                ptktData.setSoPh(rs.getString("SH2SOPH"));
                 ptktData.setPkCrCd(rs.getString("PKCRCD"));
                 orSi.add(rs.getString("ORSI1"));
                 orSi.add(rs.getString("ORSI2"));
@@ -305,10 +311,11 @@ public class RequestedPickTickets {
                     if (rs.getString("CHCRCD").equals("F")) {
                         callFedexVoidShp(ptktData);
                     } else {
+                        VoidTracking.voidTracking(parms, rs.getString("CHTRK").trim());
+                    }
                     voidTrkUpsExp(rs.getString("CHTRK"));
-                    }
-                    VoidTracking.voidTracking(parms, rs.getString("CHTRK").trim());
-                    }
+
+                }
                 try {
                     wDate = new SimpleDateFormat("yyyyMMddHHmmss").parse(
                             new DecimalFormat("00000000").format(rs.getBigDecimal("PKHPDT"))
@@ -328,7 +335,7 @@ public class RequestedPickTickets {
                     if (!ptktData.getSvcCd().trim().isEmpty()) {
                         //upsResponse = CreateUpsLabel.createUpsLabel(parms, ptktData);
                         if (rs.getString("PKCRCD").equals("F")) {  //Ship via = Fedex
-                            ptktData.setSvcCd(rs.getString("PKFXSVCD").trim());
+  //                          ptktData.setSvcCd(rs.getString("PKFXSVCD").trim());
                             upsResponse = callFedexShip(ptktData);
                         } else {
                             upsResponse = createUpsLabel.createUpsLabel(parms, ptktData);
@@ -360,7 +367,7 @@ public class RequestedPickTickets {
                     // end test 12/17
                     ptktPrint.print(ptktData, upsResponse, reprint);
                 }
-                 
+
                 updCrtn(rs.getBigDecimal("CHPCK#"),
                         rs.getBigDecimal("CHCAR#"), trkNo,
                         lblMsg, ptktData.getPkCrCd(), upsResponse.getTrkTyp());
@@ -373,7 +380,7 @@ public class RequestedPickTickets {
             }
 
         } catch (SQLException ex) {
-            AppParms.getLogger().log(Level.SEVERE, "Error retreiving PTKT Data. {0} SqlState ={1}", 
+            AppParms.getLogger().log(Level.SEVERE, "Error retreiving PTKT Data. {0} SqlState ={1}",
                     new Object[]{ex.getLocalizedMessage(), ex.getSQLState()});
             //Logger.getLogger(RequestedPickTickets.class.getName()).log(Level.SEVERE, null, ex);
             svcRtn.setFatalErr(true);
@@ -385,6 +392,7 @@ public class RequestedPickTickets {
                     + ex.getLocalizedMessage());
             svcRtn.setFatalErr(false);
         } catch (Exception ex) {
+            ex.printStackTrace();
             //Logger.getLogger(RequestedPickTickets.class.getName()).log(Level.SEVERE, null, ex);
             AppParms.getLogger().log(Level.SEVERE, "Error retreiving PTKT Data. "
                     + "ptkt #" + svPck + " "
@@ -406,10 +414,11 @@ public class RequestedPickTickets {
 //        fxParms.setKey(parms.getFxKey());
 //        fxParms.setMeterNumber(parms.getFxMeterNo());
 //        fxParms.setPassWord(parms.getFxPassWord());
-
         FedexShipClient fedexShipClient = new FedexShipClient(fxParms, AppParms.getLogger());
+        FedexAddrValClient fedexAdrVal = new FedexAddrValClient(fxParms, AppParms.getLogger());
         FedexShipmentRequest fedexRequest = new FedexShipmentRequest();
-        fedexRequest.setShipperComp(ptktData.getShpFrmNam());
+      //  fedexRequest.setShipperComp(ptktData.getShpFrmNam());
+        fedexRequest.setShipperComp("");
         fedexRequest.setShipperName(ptktData.getShprDspName());
         fedexRequest.setShipperPhone(ptktData.getShprPh());
         for (String adr : ptktData.getShprAdr()) {
@@ -435,7 +444,7 @@ public class RequestedPickTickets {
         fedexRequest.setRecZip(ptktData.getShpToZip());
         fedexRequest.setRecCountry(ptktData.getShpToCntr());
 
-        fedexRequest.setRecRes(false);
+        //fedexRequest.setRecRes(false);
         fedexRequest.setDropOffTyp(DropoffType.REGULAR_PICKUP);
         fedexRequest.setSrvTyp(ptktData.getSvcCd());
         fedexRequest.setPkgTyp("YOUR_PACKAGING");
@@ -454,8 +463,22 @@ public class RequestedPickTickets {
         fedexRequest.getCustomerReference().add(FedexShipClient.fmtCustomerReference(CustomerReferenceType.CUSTOMER_REFERENCE, ptktData.getRefPtkt()));
         fedexRequest.setPtkt(ptktData.getPtktNo());
         fedexRequest.setCrtnId(ptktData.getCrtnId());
-        
+
         fedexRequest.setRecPhone("9XXXXXXX21");
+
+        // get receivaer address residence status
+        FedexAddrResponse fedexAdrValResponse = FedexAddrValClient.validateAddress(fedexRequest);
+        if (fedexAdrValResponse.getMsgSeverity().equals(com.fedex.addressvalidation.stub.NotificationSeverityType._SUCCESS)
+                || fedexAdrValResponse.getMsgSeverity().equals(com.fedex.addressvalidation.stub.NotificationSeverityType._WARNING)
+                || fedexAdrValResponse.getMsgSeverity().equals(com.fedex.addressvalidation.stub.NotificationSeverityType._NOTE)) {
+            fedexRequest.setRecRes(fedexAdrValResponse.isResidential());
+            if (fedexAdrValResponse.isResidential() && fedexRequest.getSrvTyp().trim().equals("FEDEX_GROUND")) {
+                fedexRequest.setSrvTyp("GROUND_HOME_DELIVERY");
+            }
+        } else {
+            fedexRequest.setRecRes(false);
+        }
+
         FedexResponse fedexResponse = FedexShipClient.requestShipment(fedexRequest);
 
         response.setBlgWgt(fedexResponse.getBlgWgt());
@@ -468,28 +491,33 @@ public class RequestedPickTickets {
         response.setTrkTyp(fedexResponse.getTrkTyp());
         LblRspStat lblRspStat = new LblRspStat();
 
-        if (fedexResponse.getMsgSeverity().equals(NotificationSeverityType._SUCCESS )||
-                fedexResponse.getMsgSeverity().equals(NotificationSeverityType._WARNING)  ||
-                fedexResponse.getMsgSeverity().equals(NotificationSeverityType._NOTE)) {
+        if (fedexResponse.getMsgSeverity().equals(NotificationSeverityType._SUCCESS)
+                || fedexResponse.getMsgSeverity().equals(NotificationSeverityType._WARNING)
+                || fedexResponse.getMsgSeverity().equals(NotificationSeverityType._NOTE)) {
             lblRspStat.setErrStat("1");
         } else {
             lblRspStat.setErrCode(fedexResponse.getMsgSeverity());
             lblRspStat.setErrMsg(fedexResponse.getMessage());
+            
         }
         response.setLblRspStat(lblRspStat);
 
         return response;
     }
+
     private void callFedexVoidShp(PtktData ptktData) {
         FedexResponse response = new FedexResponse();
-        FxAppParms fxParms = setFxAppParms(); 
+        FxAppParms fxParms = setFxAppParms();
         FedexShipClient fedexShipClient = new FedexShipClient(fxParms, AppParms.getLogger());
         FedexShipmentRequest fedexRequest = new FedexShipmentRequest();
         fedexRequest.setTrkId(ptktData.getTrkId());
         fedexRequest.setTrkIdType(ptktData.getTrkIdType());
+        fedexRequest.setPtkt(ptktData.getPtktNo());
+        fedexRequest.setCrtnId(ptktData.getCrtnId());
         response = FedexShipClient.requestDeleteShipment(fedexRequest);
-        
+
     }
+
     private FxAppParms setFxAppParms() {
         FxAppParms fxParms = new FxAppParms();
 
@@ -499,9 +527,10 @@ public class RequestedPickTickets {
         fxParms.setKey(parms.getFxKey());
         fxParms.setMeterNumber(parms.getFxMeterNo());
         fxParms.setPassWord(parms.getFxPassWord());
-        
+        fxParms.setDebug(true);
+
         return fxParms;
-        
+
     }
 
     private void updCrtn(BigDecimal ptkt, BigDecimal crtn, String trkNo,
@@ -529,8 +558,8 @@ public class RequestedPickTickets {
             } else {
                 pStmt.setString(5, rspMsg);     // UPS error  
             }
-            pStmt.setString(6,pkCrCd);
-            pStmt.setString(7, svCd);
+            pStmt.setString(6, pkCrCd);
+            pStmt.setString(7, svCd == null ? " " : svCd  );
             pStmt.setBigDecimal(8, ptkt);
             pStmt.setBigDecimal(9, crtn);
             pStmt.executeUpdate();
@@ -551,7 +580,7 @@ public class RequestedPickTickets {
             pstmt.setBigDecimal(1, new BigDecimal(ptktData.getPtktNo()));
             pstmt.setString(2, upsResponse.getTrkNo());
             pstmt.setBigDecimal(3, ptktData.getCmdWgt());
-            pstmt.setBigDecimal(4, upsResponse.getTotChrg());
+            pstmt.setBigDecimal(4, upsResponse.getTotChrg() == null ? BigDecimal.ZERO : upsResponse.getTotChrg());
             pstmt.setString(5, ptktData.getRefPtkt());
             pstmt.setString(6, "PO: " + ptktData.getRefPo());
             pstmt.setString(7, ptktData.getSoldTo());
