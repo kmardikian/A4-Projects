@@ -1,0 +1,120 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+
+}
+/*
+toolbar label
+*/
+.tbarlbl {
+    -fx-background-color: #80ddc3; 
+    -fx-font: 14px "System"; 
+}
+ 
+.numColumn { 
+  -fx-alignment: center-right; 
+} 
+.text-field.error {
+    -fx-text-box-border: red;
+    -fx-text-fill: red;
+}
+.label.error{
+    -fx-text-fill: red;
+}
+.jfx-date-picker.error {
+    -fx-border-color: red;
+    -fx-text-fill: red;
+}
+.varData {
+    -fx-background-color: cornsilk;
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-padding: 3px 10px 3px 10px;
+    -fx-border-radius: 4;
+}
+.selCell:hover {
+    -fx-background-color: #80ddc3;
+    
+}
+.table-row-cellSel:hover{
+    -fx-background-color: #80ddc3;
+}
+/*.table-row-cell:hover{
+    -fx-background-color: #80ddc3;
+} */
+.data0.chart-pie {
+    -fx-pie-color: #c67e66;
+} 
+.data1.chart-pie {
+    -fx-pie-color: #0ed3c2;
+} 
+.data2.chart-pie {
+    -fx-bar-fill: #099085;  
+}
+.data3.chart-pie {
+    -fx-pie-color: #8ec466;
+} 
+.data4.chart-pie {
+    -fx-pie-color: #c34d09;
+} 
+.data5.chart-pie {
+    -fx-pie-color: #7d66c4;
+} 
+.data6.chart-pie {
+    -fx-pie-color: #c215a3;
+} 
+.data7.chart-pie {
+    -fx-pie-color: #c39d15;
+} 
+.data8.chart-pie {
+    -fx-pie-color: #009973;
+}
+
+.series0.chart-bar {
+    -fx-bar-fill: #c67e66; 
+}
+.series1.chart-bar {
+    -fx-bar-fill: c39d15;
+}
+.series2.chart-bar {
+    -fx-bar-fill: #ffd633;  
+}
+.series3.chart-bar {
+    -fx-bar-fill: #8ec466;
+}
+.series4.chart-bar {
+    -fx-bar-fill: #4fc9c9
+}
+.series5.chart-bar {
+    -fx-bar-fill: #c34d09;
+}
+.series6.chart-bar {
+    -fx-bar-fill: #7d66c4;
+}
+.series7.chart-bar {
+    -fx-bar-fill: #c215a3;
+}
+.series8.chart-bar {
+    -fx-bar-fill: #0000ff;
+}
+.default-color8x.chart-bar {
+    -fx-bar-fill: #009973;
+}
+.series9.chart-bar {
+    -fx-bar-fill: #009973;
+}
+.table-view .column-header .label{
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+}
+.table-view .column-header {
+    -fx-wrap-text: true;
+}
+
+
+/* .cell :hover {
+    -fx-background-color: #80ddc3; 
+}
+*/

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ptktCrtnDetail.PickTicketCrtnDtlController">
+    <stylesheets>
+        <URL value="@/res/appCss.css"/>
+    </stylesheets>
+    <children>
+      <VBox maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+                        <ToolBar VBox.vgrow="NEVER">
+                    <items>
+                      <Button fx:id="btnExport" disable="true" mnemonicParsing="false"  text="Export to Excel" />
+                  <Region prefHeight="0.0" prefWidth="200.0" />
+                  <Label text="Pick Ticket Count" />
+                  <Label fx:id="lblPtkCnt" styleClass="varData" text=" " />
+                  <Label text="Carton Count" />
+                  <Label fx:id="lblCtnCnt" styleClass="varData" text=" " />
+                  <Label text="Total Units:" />
+                  <Label fx:id="lblTotU" styleClass="varData" />
+                  <Label text="Total Dollars:" />
+                  <Label fx:id="lblTotD" styleClass="varData" text=" " />
+                    </items>
+                  </ToolBar>
+         </children>
+      </VBox>
+    </children>
+</AnchorPane>
