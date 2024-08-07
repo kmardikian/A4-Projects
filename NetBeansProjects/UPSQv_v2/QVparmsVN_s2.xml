@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_261" class="java.beans.XMLDecoder">
+ <object class="upsqv_v2.QVParms">
+  <void property="as400Lib">
+   <string>TSTDBASE</string>
+  </void>
+  <void property="as400Password">
+   <string>FEBY2K3</string>
+  </void>
+  <void property="as400SystemName">
+   <string>AS400.A4.COM</string>
+  </void>
+  <void property="as400UserId">
+   <string>KHATCHIK</string>
+  </void>
+  <void property="endDt">
+   <string>20240609235900</string>
+  </void>
+  <void property="qvLicense">
+   <string>4D08F7169B6154E6</string>
+  </void>
+  <void property="qvPassWord">
+   <string>Tanman96!</string>
+  </void>
+  <void property="qvUrl">
+   <string>https://onlinetools.ups.com/api/quantumview/V2/events</string>
+  </void>
+  <void property="qvUserId">
+   <string>erindiebold2</string>
+  </void>
+  <void property="startDt">
+   <string>20240605235900</string>
+  </void>
+  <void property="upsAutUrl">
+   <string>https://wwwcie.ups.com/security/v1/oauth/token</string>
+  </void>
+  <void property="upsClientId">
+   <string>KQf9GTDU0S83qGFqgpmgdINvy34kU8dIvWVbmVPdbb9MmQnd</string>
+  </void>
+  <void property="upsSecCd">
+   <string>vG9gFehHKtxlHogGa7sDS7XLprwgBAYaaVTXTcqjXoGZacZNRCJYchJK1WjBzGkg</string>
+  </void>
+  <void property="upsShprNo">
+   <string>928946</string>
+  </void>
+ </object>
+</java>
