@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_261" class="java.beans.XMLDecoder">
+ <object class="model.FXParms">
+  <void property="addrValPath">
+   <string>/address/v1/addresses/resolve</string>
+  </void>
+  <void property="debug">
+   <boolean>false</boolean>
+  </void>
+  <void property="environment">
+   <string>Windows</string>
+  </void>
+  <void property="fxAutPath">
+   <string>/oauth/token</string>
+  </void>
+  <void property="fxClientId">
+   <string>l7e231abde67a444d9b209ea334eb13f40</string>
+  </void>
+  <void property="fxRatePath">
+   <string>/rate/v1/rates/quotes</string>
+  </void>
+  <void property="fxSecCd">
+   <string>73e166edc3af40de8d21518cf47aa902</string>
+  </void>
+  <void property="fxServer">
+   <string>https://apis.fedex.com</string>
+  </void>
+  <void property="fxShprNo">
+   <string>203549279</string>
+  </void>
+  <void property="logLocation">
+   <string>c:\users\khatchik</string>
+  </void>
+ </object>
+</java>
