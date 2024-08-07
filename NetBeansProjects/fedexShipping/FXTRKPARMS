@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="11.0.19" class="java.beans.XMLDecoder">
+ <object class="models.FxTrkParms">
+  <void property="as400Lib">
+   <string>ACSDBASE</string>
+  </void>
+  <void property="as400Password">
+   <string>ACSINC</string>
+  </void>
+  <void property="as400SystemName">
+   <string>AS400.A4.COM</string>
+  </void>
+  <void property="as400UserId">
+   <string>ACSINC</string>
+  </void>
+  <void property="clientSecret">
+   <string>9bf45b7098db467fa4c4469528b23488</string>
+  </void>
+  <void property="clientid">
+   <string>l749551e9f44394b38bdb6a8a4b52c6815</string>
+  </void>
+  <void property="environment">
+   <string>Windows</string>
+  </void>
+  <void property="fxAccountNumber">
+   <string>791906970</string>
+  </void>
+  <void property="fxSecPath">
+   <string>/oauth/token</string>
+  </void>
+  <void property="fxServer">
+   <string>https://apis.fedex.com</string>
+  </void>
+  <void property="fxTrkPath">
+   <string>/track/v1/trackingnumbers</string>
+  </void>
+  <void property="logLocation">
+   <string>c:\users\khatchik</string>
+  </void>
+ </object>
+</java>

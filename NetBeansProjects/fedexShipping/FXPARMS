@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_261" class="java.beans.XMLDecoder">
+ <object class="fedexshipping.FxAppParms">
+  <void property="accountNumber">
+   <string>203549279</string>
+  </void>
+  <void property="addrValPath">
+   <string>/address/v1/addresses/resolve</string>
+  </void>
+  <void property="authPath">
+   <string>/oauth/token</string>
+  </void>
+  <void property="clientId">
+   <string>l7e231abde67a444d9b209ea334eb13f40</string>
+  </void>
+  <void property="clientSecret">
+   <string>73e166edc3af40de8d21518cf47aa902</string>
+  </void>
+  <void property="cxlShpPath">
+   <string>/ship/v1/shipments/cancel</string>
+  </void>
+  <void property="debug">
+   <boolean>true</boolean>
+  </void>
+  <void property="fedexLblLoc">
+   <string>C:\Users\Khatchik</string>
+  </void>
+  <void property="server">
+   <string>https://apis.fedex.com</string>
+  </void>
+  <void property="shipPath">
+   <string>/ship/v1/shipments</string>
+  </void>
+ </object>
+</java>
