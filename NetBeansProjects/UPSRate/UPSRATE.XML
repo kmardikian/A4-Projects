@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_261" class="java.beans.XMLDecoder">
+ <object class="model.UPSParms">
+  <void property="as400Lib">
+   <string>ACSDBASE</string>
+  </void>
+  <void property="as400Password">
+   <string>ACSINC</string>
+  </void>
+  <void property="as400SystemName">
+   <string>AS400.A4.COM</string>
+  </void>
+  <void property="as400UserId">
+   <string>ACSINC</string>
+  </void>
+  <void property="debug">
+   <boolean>true</boolean>
+  </void>
+  <void property="environment">
+   <string>Windows</string>
+  </void>
+  <void property="logLocation">
+   <string>c:\users\khatchik</string>
+  </void>
+  <void property="upsAutPath">
+   <string>/security/v1/oauth/token</string>
+  </void>
+  <void property="upsClientId">
+   <string>KQf9GTDU0S83qGFqgpmgdINvy34kU8dIvWVbmVPdbb9MmQnd</string>
+  </void>
+  <void property="upsRatePath">
+   <string>/api/rating/v2403/Rate</string>
+  </void>
+  <void property="upsSecCd">
+   <string>upsSecCd</string>
+  </void>
+  <void property="upsServer">
+   <string>https://onlinetools.ups.com</string>
+  </void>
+  <void property="upsShprNo">
+   <string>928946</string>
+  </void>
+ </object>
+</java>
