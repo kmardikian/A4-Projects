@@ -61,6 +61,7 @@ public class PtktDetailRow {
     private final SimpleStringProperty poNo;
     private final SimpleStringProperty webOrd;
     private final SimpleIntegerProperty orPrl;
+    private final SimpleStringProperty trgShpBy; 
    // private final ZonedDateTime prtDateTime;
     //private final ZonedDateTime zonedStgDatTim;
 
@@ -68,7 +69,8 @@ public class PtktDetailRow {
             String shipTo, String svia, String whse, BigDecimal units, BigDecimal dollars, String status,
             String operator, Double prtDate, Double prtTime, BigDecimal orStrDt,
             BigDecimal orCmpDt, String cusName, String shpName, String ordType, 
-            String stgDatTm, Integer totCtn , String poNo, String webOrd, BigDecimal orPrl ) {
+            String stgDatTm, Integer totCtn , String poNo, String webOrd, 
+            BigDecimal orPrl, LocalDate trgShpBy ) {
 
         DecimalFormat docFormater = new DecimalFormat("#######");
         DecimalFormat unitFormater = new DecimalFormat("#,###,##0");
@@ -76,6 +78,9 @@ public class PtktDetailRow {
                 = new Locale.Builder().setLanguage("en").setRegion("US").build();
         NumberFormat currencyFormatter
                 = NumberFormat.getCurrencyInstance(enUSLocale);
+        
+        //DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+       // this.trgShpBy = new SimpleStringProperty(trgShpBy.format(dtFormatter));
 
         this.ptktNo = new SimpleStringProperty(docFormater.format(ptktNo.setScale(0)));
         this.ordNo = new SimpleStringProperty(docFormater.format(ordNo.setScale(0)));
@@ -128,6 +133,8 @@ public class PtktDetailRow {
         this.totCtn = new SimpleIntegerProperty(totCtn);
         this.poNo = new SimpleStringProperty(poNo);
         this.webOrd = new SimpleStringProperty(webOrd);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        this.trgShpBy = new SimpleStringProperty(trgShpBy.format(dateFormatter));
 //        prtDateTime = AppParms.dec2ZoneDt(BigDecimal.valueOf(prtDate)
 //                ,BigDecimal.valueOf(prtTime));
         //BigDecimal statStrDt = new BigDecimal(stgDatTm.substring(0, 8));
@@ -314,6 +321,11 @@ public class PtktDetailRow {
     public SimpleIntegerProperty getTotCtn() {
         return totCtn;
     }
+
+    public SimpleStringProperty getTrgShpBy() {
+        return trgShpBy;
+    }
+    
         
     public SimpleStringProperty getTimDif() {
         String pattern = "hh:mm:ss a";

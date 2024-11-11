@@ -57,6 +57,8 @@ public class PtkCarton implements Comparable<PtkCarton> {
     private final String poNo;
     private final String webOrd;
     private final BigDecimal orPrl;
+    private final String pkhDisF;
+    private final Double orPrtTime;
     private int row;
 
     public PtkCarton(BigDecimal crtnNo, BigDecimal ptktNo, BigDecimal ordNo, String soldTo,
@@ -65,7 +67,8 @@ public class PtkCarton implements Comparable<PtkCarton> {
             Double prtDate, Double prtTime, BigDecimal orStrtDt, BigDecimal orCmpDt,
             String cusName, String ordTyp, String pkrOpr, String shpToNam,
             Integer skuCnt, String ctnStat, BigDecimal stgSDat, BigDecimal stgSTim,
-            BigDecimal stgEDat, BigDecimal stgETim ,String poNo, String webOrd, BigDecimal orPrl ) {
+            BigDecimal stgEDat, BigDecimal stgETim ,String poNo, String webOrd, BigDecimal orPrl,
+            String pkhDisF) {
 
         this.crtnNo = crtnNo;
         this.ptktNo = ptktNo;
@@ -83,6 +86,7 @@ public class PtkCarton implements Comparable<PtkCarton> {
         this.crtOpr = crtOpr;
         //this.prtDate = prtDate;
         //this.prtTime = prtTime;
+        this.orPrtTime = prtTime;
         this.orStrDt = orStrtDt;
         this.orCmpDt = orCmpDt;
         this.cusName = cusName;
@@ -93,6 +97,7 @@ public class PtkCarton implements Comparable<PtkCarton> {
         this.poNo = poNo;
         this.webOrd = webOrd;
         this.orPrl = orPrl;
+        this.pkhDisF = pkhDisF;
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         //DecimalFormat formater8 = new DecimalFormat("00000000");
         //DecimalFormat formater6 = new DecimalFormat("000000");
@@ -317,6 +322,15 @@ public class PtkCarton implements Comparable<PtkCarton> {
     public BigDecimal getOrPrl() {
         return orPrl;
     }
+
+    public String getPkhDisF() {
+        return pkhDisF;
+    }
+
+    public Double getOrPrtTime() {
+        return orPrtTime;
+    }
+    
     
 
    

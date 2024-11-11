@@ -6,11 +6,14 @@
 package ptktData;
 
 import com.a4.utils.ConnectAs400;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -102,6 +105,39 @@ public class CNTLP {
         }
           
         return ptktStatList;
+        
+    }
+    public Map<String,WhseCutoffData> getWhseCutoffData() throws CustomException {
+        this.con = ConnectAs400.getConnection();
+         Map<String,WhseCutoffData> whseCutoffData = new HashMap();
+         String whse;
+         Double cutOff;
+  
+          Statement stmt;
+          String Qry = "Select CNELK "
+                  + ",cnva2 "
+                  + "from " + dtaLib + ".CNTLP a "
+                  + "Where cnelt = 'W4' "
+                  + "and substring(cnelk,1,1) <>'*' "
+                  ;
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(Qry);
+            while(rs.next()) {
+                whse = rs.getString("CNELK").substring(0,2);
+                cutOff = rs.getBigDecimal("CNVA2")
+                        .multiply(BigDecimal.valueOf(10000))
+                        .doubleValue();
+                        
+                whseCutoffData.put(whse, new WhseCutoffData(whse,cutOff));
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CNTLP.class.getName()).log(Level.SEVERE, null, ex);
+            throw new CustomException("error warehouse cutoff data " + ex.getLocalizedMessage());
+        }
+          
+        return whseCutoffData;
         
     }
     

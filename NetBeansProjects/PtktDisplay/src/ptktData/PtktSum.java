@@ -11,20 +11,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import static ptktData.AppParms.B4_1ORD;
+import static ptktData.AppParms.TORD;
+import ptktdisplay.KpiTblRow;
 
 /**
  *
  * @author Khatchik
  */
 public class PtktSum {
+
     private ArrayList<PtktByPtkt> ptktList = new ArrayList<>();
     private ArrayList<PtkCarton> ptkCartonList = new ArrayList<>();
     private ArrayList<PtktPrd> ptktPrdList = new ArrayList<>();
+    private ArrayList<KpiTblRow> kpiTbl = new ArrayList();
     private Map<BigDecimal, PtktByPtkt> ptktByPtk = new HashMap<>();
     private Map<String, PtktSumByStat> ptktStatMap = new HashMap<>();
     private Map<String, PtktSumByPrd> ptktPrdMap = new HashMap<>();
     private Map<String, PtktSumByPkr> ptktPkrMap = new HashMap<>();
+    private Map<String, KpiTblRow> kpiTblMap = new HashMap<>();
     private Double curDtNum;
     private String curDt;
 
@@ -75,20 +82,20 @@ public class PtktSum {
 //
 //    }
     public void add(ArrayList<PtkCarton> ptkCrtList) {
-        
+
         this.ptkCartonList = ptkCrtList;
         this.ptkCartonList.forEach((ptkCart) -> {
-           // ptkCart.setPeriod(updPrd(ptkCart));
+            // ptkCart.setPeriod(updPrd(ptkCart));
             updCrtPrd(ptkCart);
             updPtktMap(ptkCart);
         });
         ptktList.addAll(ptktByPtk.values());
         Collections.sort(ptktList);
         ptktByPtk.clear();
-        
+
         ptktList.forEach((PtktByPtkt ptk) -> {
             updSum(ptk);
-            }
+        }
         );
         // after pick ticket List is created update other summary levels
     }
@@ -111,7 +118,6 @@ public class PtktSum {
 //        }
 //        return prd;
 //    }
-
     private void updPtktMap(PtkCarton ptkCrt) {
 
         if (ptktByPtk.get(ptkCrt.getPtktNo()) == null) {
@@ -120,8 +126,9 @@ public class PtktSum {
             ptktByPtk.get(ptkCrt.getPtktNo()).updPtkt(ptkCrt);
         }
     }
-    private void updCrtPrd (PtkCarton ptkCrt) {
-        
+
+    private void updCrtPrd(PtkCarton ptkCrt) {
+
         Double ptktTime = ptkCrt.getPrtTime();
         int row = 0;
         String prd = "";
@@ -137,15 +144,14 @@ public class PtktSum {
                 }
             }
         }
-        
+
         ptkCrt.setPeriod(prd);
         ptkCrt.setRow(row);
-        
-        
+
     }
 
     private void updSum(PtktByPtkt ptk) {
-        
+
 //        Double ptktTime = ptk.getPrtTime();
 //        int row = 0;
 //        String prd = "";
@@ -163,7 +169,6 @@ public class PtktSum {
 //        }
 //        
 //        ptk.setPeriod(prd);
-        
         if (ptktPrdMap.get(ptk.getPeriod()) == null) {
             ptktPrdMap.put(ptk.getPeriod(), new PtktSumByPrd(ptk.getPeriod(), ptk.getRow()));
         }
@@ -203,10 +208,10 @@ public class PtktSum {
         // update sum by stat
         String wStat;
         wStat = ptk.getStatus().trim();
-        if (wStat.equals(AppParms.PAK_STAT_NAME) ) {
+        if (wStat.equals(AppParms.PAK_STAT_NAME)) {
             wStat = AppParms.QUA_STAT_NAME;
         }
-        
+
         if (ptktStatMap.get(wStat) == null) {
 //            System.out.println("not foud:" + ptkCrt.getStatus());
             ptktStatMap.put(wStat, new PtktSumByStat(wStat,
@@ -222,6 +227,49 @@ public class PtktSum {
                 ptk.getTotu(), ptk.getTotd(), ptk.getCrtnCnt());
 
         //return prd;
+    }
+
+    void sumKpi() {
+        int b41pm_open = 0;
+        int b41pm_shipped = 0;
+        int todayOpen = 0;
+        int todayShipped = 0;
+        WhseCutoffData cutoff;
+
+        for (PtktByPtkt ptktEnt : ptktList) {
+
+            if (AppParms.getWhseCutoffData().containsKey(ptktEnt.getWhse())) {
+                cutoff = AppParms.getWhseCutoffData().get(ptktEnt.getWhse());
+
+                if (ptktEnt.getPrtDate().compareTo(getCurDtNum()) == 0
+                        && !ptktEnt.getStatus().equals(AppParms.DIS_STAT_NAME)) {
+
+                    if (ptktEnt.getOrPrtTime().compareTo(cutoff.getCutOffTime()) <= 0) {
+
+                        if (ptktEnt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
+                            b41pm_shipped++;
+                        } else {
+                            b41pm_open++;
+                        }
+                    }
+                    if (ptktEnt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
+                        todayShipped++;
+                    } else {
+                        todayOpen++;
+                    }
+                }
+            }
+        }
+
+        KpiTblRow kpiRow;
+
+        kpiRow = new KpiTblRow(B4_1ORD, b41pm_open, b41pm_shipped);
+        kpiTblMap.put(B4_1ORD, kpiRow);
+        this.kpiTbl.add(kpiRow);
+
+        kpiRow = new KpiTblRow(TORD, todayOpen, todayShipped);
+        kpiTblMap.put(TORD, kpiRow);
+        this.kpiTbl.add(kpiRow);
 
     }
 
@@ -259,7 +307,7 @@ public class PtktSum {
     public ArrayList<PtkCarton> getPtkCartonList() {
         return ptkCartonList;
     }
-    
+
     public ArrayList<PtktByPtkt> getPtktByPtkt() {
         Collections.sort(ptktList);
         return ptktList;
@@ -278,6 +326,22 @@ public class PtktSum {
             rtnByPkr = ptktPkrMap.get(pkr);
         }
         return rtnByPkr;
+    }
+
+    public ArrayList<KpiTblRow> getKpiTbl() {
+        return kpiTbl;
+    }
+
+    public Map<String, KpiTblRow> getKpiTblMap() {
+        return kpiTblMap;
+    }
+
+    public Double getCurDtNum() {
+        return curDtNum;
+    }
+
+    public String getCurDt() {
+        return curDt;
     }
 
 }

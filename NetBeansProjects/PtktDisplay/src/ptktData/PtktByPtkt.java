@@ -7,6 +7,9 @@ package ptktData;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -28,6 +31,7 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
     private final String operator;
     private final Double prtDate;
     private final Double prtTime; 
+    private final double orPrtTime;
     private String period;
     private final String cusName;
     private final String ordTyp;
@@ -41,7 +45,9 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
     private BigDecimal stgSTm;
     private BigDecimal stgEDt;
     private BigDecimal stgETm;
-    private BigDecimal orPrl; 
+    private BigDecimal orPrl;
+    private LocalDate trgShipDt;
+    private final String pkhDisF;
     private int row;
    
 
@@ -50,7 +56,7 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
             String sVia, String status, BigDecimal statusNum, String operator, 
             Double prtDate, Double prtTime, BigDecimal orStrtDt, BigDecimal orCmpDt
     ,String cusName, String ordTyp, String stgDatTm, String pkrOpr,String shpToNam
-    , Integer crtnCnt, String poNo, String webOrd, BigDecimal orPrl) {
+    , Integer crtnCnt, String poNo, String webOrd, BigDecimal orPrl, String pkhDisF) {
         this.ptktNo = ptktNo;
         this.ordNo = ordNo;
         this.soldTo = soldTo;
@@ -64,6 +70,7 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
         this.operator = operator;
         this.prtDate = prtDate;
         this.prtTime = prtTime;
+        this.orPrtTime = prtTime;
         this.orStrDt = orStrtDt;
         this.orCmpDt=orCmpDt;
         this.cusName= cusName;
@@ -79,6 +86,7 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
         this.poNo = poNo;
         this.webOrd = webOrd;
         this.orPrl = orPrl;
+        this.pkhDisF = pkhDisF;
     }
     public PtktByPtkt(PtkCarton ptkCrt) {
         DecimalFormat dec8 = new DecimalFormat("00000000");
@@ -98,6 +106,7 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
         this.operator = ptkCrt.getOperator();
         this.prtDate = ptkCrt.getPrtDate();
         this.prtTime = ptkCrt.getPrtTime();
+        this.orPrtTime = ptkCrt.getOrPrtTime();
         this.orStrDt = ptkCrt.getOrStrtDt();
         this.orCmpDt= ptkCrt.getOrCmpDt();
         this.cusName= ptkCrt.getCusName();
@@ -114,6 +123,10 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
         this.period = ptkCrt.getPeriod();
         this.orPrl = ptkCrt.getOrPrl();
         this.row = ptkCrt.getRow();
+        this.pkhDisF = ptkCrt.getPkhDisF();
+        calctrgShipDt();
+        
+                //LocalDate.parse(dateFmt.format(this.prtDate), dtFormat);
     }
     public void updPtkt(PtkCarton ptkCrt) {
         this.totu = this.totu.add(ptkCrt.getTotu());
@@ -229,6 +242,11 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
         return crtnCnt;
     }
 
+    public LocalDate getTrgShipDt() {
+        return trgShipDt;
+    }
+    
+
     public int getRow() {
         return row;
     }
@@ -260,6 +278,10 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
     public void setOrPrl(BigDecimal orPrl) {
         this.orPrl = orPrl;
     }
+
+    public Double getOrPrtTime() {
+        return orPrtTime;
+    }
     
     
     
@@ -279,6 +301,34 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
             result =o.ptktNo.compareTo(this.ptktNo);
         }
         return result;
+    }
+    private void calctrgShipDt() {
+        DecimalFormat dateFmt = new DecimalFormat("00000000");
+        String sPrtDt = dateFmt.format(this.prtDate);
+        String sprtYY = sPrtDt.substring(0,4);
+        String sprtMM = sPrtDt.substring(4,6);
+        String sprtDD = sPrtDt.substring(6, 8);
+        String sPrtDt2 = sprtYY + "-" + sprtMM + "-" + sprtDD;        
+        this.trgShipDt = LocalDate.parse(sPrtDt2);
+        if (this.prtTime > 130000) {
+            this.trgShipDt =this.trgShipDt.plusDays(1);
+        }
+        if (this.pkhDisF.endsWith("Y")) {
+            adjustforDisDate();
+        }
+    }
+    private void adjustforDisDate() {
+        DayOfWeek dayOfWeek = this.trgShipDt.getDayOfWeek();
+        int iWeekDay= dayOfWeek.getValue();
+        int adjDt = 0;
+        if (iWeekDay < 3) {
+            adjDt = iWeekDay + 7 - 3;
+        } else {
+            adjDt = iWeekDay - 3;
+        }
+        adjDt = 9 - adjDt; 
+        this.trgShipDt = this.trgShipDt.plusDays(adjDt);
+        
     }
     
 }

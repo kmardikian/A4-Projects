@@ -10,6 +10,7 @@ import com.a4.utils.ConnectAs400;
 import com.a4.utils.ConnectionException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -30,6 +32,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -44,11 +47,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
@@ -58,12 +64,14 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
@@ -73,10 +81,12 @@ import ptkDetailByCrtn.PickTicketDetailByCrtnController;
 import ptktData.PKHDRP;
 import ptktData.AppParms;
 import ptktData.CustomException;
+import ptktData.PtktByPtkt;
 import ptktData.PtktSum;
 import ptktData.PtktSumByPrd;
 import ptktData.PtktSumByStat;
 import ptktData.PtktSumByPkr;
+import ptktData.WhseCutoffData;
 import ptktFilter.ChangeFilterEvent;
 import ptktFilter.ChangedFilterListener;
 import ptktFilter.PtktFilter;
@@ -111,6 +121,10 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
     private ToggleGroup tglDspDtlBy;
     @FXML
     private RadioButton rbCrtDtl;
+    @FXML
+    private CheckBox cbShowKPI;
+    @FXML
+    private HBox hboxTop;
     @FXML
     private RadioButton rbPckp;
     @FXML
@@ -168,6 +182,50 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
 
     @FXML
     private TableColumn<PtktByPkrTblRow, Integer> tcPkrCrtn;
+    @FXML
+    private VBox vBoxKpi;
+    @FXML
+    private Accordion accoKpi;
+    @FXML
+    private TitledPane tpKpi;
+    // @FXML
+    // private TilePane tpKpiPi;
+
+    // same day ship chart
+    @FXML
+    private Label lblSdsTotDropped;
+    @FXML
+    private Label lblSdsTotShipped;
+    @FXML
+    private Label lblSdsPctShipped;
+    @FXML
+    private PieChart piSameDayShip;
+    @FXML
+    private PieChart piTodayShip;
+    @FXML
+    private TitledPane tpKpitblDta;
+    @FXML
+    private TableView<KpiTblRow> tblKpi;
+
+    @FXML
+    private TableColumn<KpiTblRow, String> tcKpiDescription;
+
+    @FXML
+    private TableColumn<KpiTblRow, Integer> tcKpiTktsPrinted;
+
+    @FXML
+    private TableColumn<KpiTblRow, Integer> tcKpiTktsShip;
+
+    @FXML
+    private TableColumn<KpiTblRow, Double> tcKpiTktsPctShip;
+    @FXML
+    private Label lblTodayDropped;
+
+    @FXML
+    private Label lblTodayShipped;
+
+    @FXML
+    private Label lblTodayPctShipped;
 
     // pick ticket summary by period 
     @FXML
@@ -249,17 +307,18 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
     private int conFailCnt = 0;
     private final String DTL_BY_PKP = "PTK";
     private final String DTL_BY_CRT = "CRT";
+    //private List<KpiTblRow> kpiTbl = new ArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ptktFilter = new PtktFilter();
-        DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyyMMdd"); 
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate strDate = LocalDate.now()
                 .minusMonths(1L)
                 .withDayOfMonth(01);
-        
-       // ptktFilter.setPrtDatFr(AppParms.getCurDate());
-       ptktFilter.setPrtDatFr(strDate.format(formater));
+
+        // ptktFilter.setPrtDatFr(AppParms.getCurDate());
+        ptktFilter.setPrtDatFr(strDate.format(formater));
         ptktFilter.setPrtDatTo(AppParms.getCurDate());
         ptktFilter.getWrhList().add(AppParms.getDftWrh());
         pkhdrp = new PKHDRP(ConnectAs400.getLib(), ptktFilter);
@@ -285,6 +344,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
         spnFac.setValue(spnValues.get(9));
         refreshInt = spnFac.getValue();
         spnRefInt.setValueFactory(spnFac);
+        accoKpi.setExpandedPane(tpKpitblDta);
         //refreshInt = spnValues.get(2);
 
         spnRefInt.valueProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
@@ -414,6 +474,25 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
         }
         prtNode.getTransforms().remove(scale);
         svcRefPkSumStat.restart();
+    }
+
+    @FXML
+    void cbShowKpiClicked(ActionEvent event) {
+        if (cbShowKPI.isSelected()) {
+            addKpi();
+        } else {
+            removeKpi();
+
+        }
+
+    }
+
+    private void removeKpi() {
+        hboxTop.getChildren().remove(vBoxKpi);
+    }
+
+    private void addKpi() {
+        hboxTop.getChildren().add(vBoxKpi);
     }
 
     public void refreshBtnClicked(ActionEvent e) {
@@ -655,9 +734,33 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
         //     pieChartData.add(new PieChart.Data(pSumStat.getPtktStat(),pSumStat.getPtktCnt()));
         // });
         int totCnt = 0;
-        BigDecimal totUnit = BigDecimal.ZERO;
-        BigDecimal totDlr = BigDecimal.ZERO;
+        BigDecimal totalUnit = BigDecimal.ZERO;
+        BigDecimal totalDlr = BigDecimal.ZERO;
 
+        KpiTblRow kpiTblRow = ptktSum.getKpiTblMap().get(AppParms.B4_1ORD);
+        //lblSdsTotDropped.setText(String.valueOf(b41pm_open + b41pm_shipped));
+        //lblSdsTotShipped.setText(String.valueOf(b41pm_shipped));
+        lblSdsTotDropped.setText(kpiTblRow.getNumPrtString());
+        lblSdsTotShipped.setText(kpiTblRow.getNumShpString());
+        lblSdsPctShipped.setText(kpiTblRow.getPctShpString());
+
+        ObservableList<PieChart.Data> kpiObsList = FXCollections.observableArrayList(new PieChart.Data("Open " + kpiTblRow.getNumOpenString(), kpiTblRow.getNumOpen().getValue()),
+                new PieChart.Data("Shipped " + kpiTblRow.getNumShpString(), kpiTblRow.getNumShpValue())
+        );
+
+        piSameDayShip.setData(kpiObsList);
+        
+
+        kpiTblRow = ptktSum.getKpiTblMap().get(AppParms.TORD);
+        lblTodayDropped.setText(kpiTblRow.getNumPrtString());
+        lblTodayShipped.setText(kpiTblRow.getNumShpString());
+        lblTodayPctShipped.setText(kpiTblRow.getPctShpString());
+        
+        ObservableList<PieChart.Data> kpiTordObsList = FXCollections.observableArrayList(new PieChart.Data("Open " + kpiTblRow.getNumOpenString(), kpiTblRow.getNumOpen().getValue()),
+                new PieChart.Data("Shipped " + kpiTblRow.getNumShpString(), kpiTblRow.getNumShpValue())
+        );
+        piTodayShip.setData(kpiTordObsList);
+        // piTodayShip.setData(kpiObsList);
         SimpleDateFormat datTimeFmt = new SimpleDateFormat("MM-dd-yy   hh:mm:ss a");
         String sDate = "";
         sDate = datTimeFmt.format(new Date());
@@ -674,8 +777,8 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
             String wStat;
             int pkStatCnt = pSumStat.getPtktCnt();
             totCnt += pkStatCnt;
-            totUnit = totUnit.add(pSumStat.getTotUnt());
-            totDlr = totDlr.add(pSumStat.getTotDlr());
+            totalUnit = totalUnit.add(pSumStat.getTotUnt());
+            totalDlr = totalDlr.add(pSumStat.getTotDlr());
             wStat = pSumStat.getPtktStat();
 //            pieChartData.add(new PieChart.Data(pSumStat.getPtktStat().trim()
 //                    + " " + String.format("%d", pkStatCnt).trim(),
@@ -689,7 +792,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
 //                    pSumStat.getPtktCnt()));
 
         }
-        pkStatTblRow.add(new PtktStatTblRec(stTot, totCnt, totUnit, totDlr));
+        pkStatTblRow.add(new PtktStatTblRec(stTot, totCnt, totalUnit, totalDlr));
 
         //pChrtPtktSta.setData(pieChartData);
         // pChrtPtktSta.setTitle("Open Pick tickets by status");
@@ -748,6 +851,19 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
 //                dspDetail(" ", data.getName().substring(0, 3));
 //            });
 //        });
+        ObservableList<KpiTblRow> kpiTblObvList = FXCollections.observableArrayList();
+
+        for (KpiTblRow kpiRow : ptktSum.getKpiTbl()) {
+            kpiTblObvList.add(kpiRow);
+
+        }
+        tcKpiDescription.setCellValueFactory(cellData -> cellData.getValue().getDescription());
+        tcKpiTktsPrinted.setCellValueFactory(cellData -> cellData.getValue().getNumPrt().asObject());
+        tcKpiTktsShip.setCellValueFactory(cellData -> cellData.getValue().getNumShp().asObject());
+        tcKpiTktsPctShip.setCellValueFactory(cellData -> cellData.getValue().getPctShp().asObject());
+
+        tblKpi.setItems(kpiTblObvList);
+
         btnRefresh.setDisable(false);
         btnDspDtl.setDisable(false);
         btnDspCrtDtl.setDisable(false);
@@ -2245,7 +2361,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
 
             });
         }
-        
+
         for (final XYChart.Data<String, Number> dtPcm : serPcm.getData()) {
 
             dtPcm.getNode().setOnMouseClicked((MouseEvent e) -> {

@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -54,8 +55,11 @@ public class AppParms {
     public static final String CPU_STAT_NUM = "49";
     public static final String UNASIGNED = "Unassigned";
     public static final String ALL = "*ALL";
+    public static final String TORD ="Today Total Orders";
+    public static final String B4_1ORD ="B4-1pm Orders";
     private static final ZoneId PST = ZoneId.of("America/Los_Angeles");
     private final ZoneId dftZone = ZoneId.systemDefault();
+    private static Map<String,WhseCutoffData> whseCutoffData;
        
       /**
      * Period 2 Label
@@ -101,10 +105,12 @@ public class AppParms {
     public static final int PRD13ROW = 13;
     public static final String PRD14LBL = "> 3:00 pm";
     public static final int PRD14ROW = 14;
+   
 
     public AppParms(String systemName, String user, String userPassWord,
             String dataLib, String dftWrh) throws CustomException {
         cntlp = new CNTLP( ConnectAs400.getLib());
+        whseCutoffData = cntlp.getWhseCutoffData();
         pstat = cntlp.getPtktStatList();
         pstat.add(new PtktStat(DIS_STAT_NAME, new BigDecimal(DIS_STAT_NUM)));
         pstat.add(new PtktStat(CPU_STAT_NAME, new BigDecimal(CPU_STAT_NUM)));
@@ -221,5 +227,10 @@ public class AppParms {
             
         }
     }
+    
+public static Map<String,WhseCutoffData> getWhseCutoffData() {
+    
+    return whseCutoffData;
+}    
 
 }

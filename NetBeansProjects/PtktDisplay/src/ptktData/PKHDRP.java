@@ -75,6 +75,7 @@ public class PKHDRP {
                 + ",PKHSDT "
                 + ",PKHTDT "
                 + ",CUNAM "
+                + ",CUCTY"
                 + ",OROTY "
                 + ",ifnull(i.chSdt,0) chsdt"
                 + ",ifnull(i.chstm,0) chstm"
@@ -87,6 +88,7 @@ public class PKHDRP {
                 + ",ORPO#"
                 + ",ORREM"
                 + ",ORPRL"
+                + ",PKHDISF"
                // + ",k.CRTNCNT"
                 // + ",ifNull(g.PICKER,' ') PICKER "
                 + ",ifNull(h.cndes,' ') PICKER "
@@ -264,12 +266,18 @@ public class PKHDRP {
             try (ResultSet rs = stmt.executeQuery(qry)) {
                 // String pkStat;
                 while (rs.next()) {
+                    String shipTo="";
+                    if (!rs.getString("PKHSHP").trim().isEmpty()) {
+                        shipTo =rs.getString("PKHSHP") + " "
+                                + rs.getString("cucty");
+                    }
                    ptkCarton.add(new PtkCarton(
                            rs.getBigDecimal("CDCAR#"),
                            rs.getBigDecimal("PKHPCK"),
                             rs.getBigDecimal("PKHORD"),
                             rs.getString("PKHSOL"),
-                            rs.getString("PKHSHP"),
+                           shipTo,
+                           // rs.getString("PKHSHP"),
                             rs.getString("PKHWRH"),
                             rs.getBigDecimal("TOTU"),
                             rs.getBigDecimal("TOTD"),
@@ -296,6 +304,7 @@ public class PKHDRP {
                            ,rs.getString("ORPO#")
                            ,rs.getString("ORREM")
                            ,rs.getBigDecimal("ORPRL")
+                           ,rs.getString("PKHDISF")
                     ));
                 }
                 Collections.sort(ptkCarton);
@@ -303,6 +312,7 @@ public class PKHDRP {
                 ptktSum.add(ptkCarton);
             }
             //stmt.close();
+            ptktSum.sumKpi();
             return ptktSum;
         } catch (SQLException ex) {
             System.out.println("SQL stmt = " + qry);

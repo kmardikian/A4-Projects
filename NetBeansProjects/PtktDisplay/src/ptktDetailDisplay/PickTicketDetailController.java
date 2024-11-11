@@ -146,6 +146,8 @@ public class PickTicketDetailController implements Initializable {
 
     @FXML
     private TableColumn<PtktDetailRow, String> tcPrtTime;
+     @FXML
+    private TableColumn<PtktDetailRow, String> tcShipByDt;
 
     @FXML
     private Button btnExport;
@@ -182,6 +184,7 @@ public class PickTicketDetailController implements Initializable {
     private final String COL_ORD_TYP = "Order Type";
     private final String COL_PO_NO = "PO #";
     private final String COL_WEB_ORD = "Web Ord/Remarks";
+    private final String COL_TRG_SHIP_DATE ="Target Ship by Date";
     // private final String TEST = "test";
 
     @Override
@@ -254,6 +257,7 @@ public class PickTicketDetailController implements Initializable {
                         ptktRec.getPoNo(),
                         ptktRec.getWebOrd()
                         ,ptktRec.getOrPrl()
+                        ,ptktRec.getTrgShipDt()
                 ));
                 totU = totU.add(ptktRec.getTotu());
                 totD = totD.add(ptktRec.getTotd());
@@ -342,6 +346,7 @@ public class PickTicketDetailController implements Initializable {
         tcStrDt.setCellValueFactory(cellData -> cellData.getValue().getOrStrDt());
         tcCmpDt.setCellValueFactory(cellData -> cellData.getValue().getOrCmpDt());
         tcPrtDt.setCellValueFactory(cellData -> cellData.getValue().getPrtDate());
+        tcShipByDt.setCellValueFactory(cellData->cellData.getValue().getTrgShpBy());
         tcPrtTime.setCellValueFactory(cellData -> cellData.getValue().getPrtTime());
 
         tblPtkDtl.setItems(ptktDetailRow);
@@ -532,6 +537,9 @@ public class PickTicketDetailController implements Initializable {
                 case COL_WEB_ORD:
                     setColWidth(sheet, colIx, 20);
                     break;
+                case COL_TRG_SHIP_DATE:
+                    setColWidth(sheet,colIx,20);
+                    break;
                 case COL_STAT_ST_DATE:
                     setColWidth(sheet, colIx, 20);
                     break;
@@ -619,6 +627,9 @@ public class PickTicketDetailController implements Initializable {
                         break;
                     case COL_WEB_ORD:
                         cell.setCellValue(tr.getWebOrd().getValue());
+                        break;
+                    case COL_TRG_SHIP_DATE:
+                        cell.setCellValue(tr.getTrgShpBy().getValue());
                         break;
                     case COL_SHIP_VIA:
                         cell.setCellValue(tr.getsVia().getValue());
