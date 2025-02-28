@@ -18,7 +18,7 @@
     <jar href="lib\junit-4.12.jar" size="314932" download="eager" />
     <jar href="lib\log4j-1.2.17.jar" size="489884" download="eager" />
     <jar href="lib\poi-3.16.jar" size="2679259" download="eager" />
-    <jar href="ptktDisplay.jar" size="221583" download="eager" />
+    <jar href="ptktDisplay.jar" size="222364" download="eager" />
   </resources>
   <jfx:javafx-desc  width="800" height="600" main-class="ptktdisplay.Main"  name="ptktDisplay" >
     <fx:param name="lib" value="acsdbase"/>

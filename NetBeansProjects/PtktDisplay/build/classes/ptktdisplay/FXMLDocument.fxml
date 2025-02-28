@@ -52,7 +52,7 @@
                 </ToolBar>
                 <HBox fx:id="hboxTop" prefHeight="279.0" prefWidth="1344.0" spacing="5.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="tblPtktSumStat" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="306.0" HBox.hgrow="NEVER">
+                        <TableView fx:id="tblPtktSumStat" prefHeight="287.0" HBox.hgrow="NEVER">
                             <columns>
                                 <TableColumn fx:id="tcStat" prefWidth="75.0" text="Status" />
                                 <TableColumn fx:id="tcCount" prefWidth="75.0" styleClass="numColumn" text="Count" />
@@ -63,25 +63,26 @@
                                 <Insets />
                             </HBox.margin>
                         </TableView>
-                        <TableView fx:id="tblPkrSum" prefHeight="303.0" prefWidth="1100.0" HBox.hgrow="NEVER">
+                        <TableView fx:id="tblPkrSum" prefHeight="299.0" HBox.hgrow="NEVER">
                             <columns>
-                                <TableColumn fx:id="tcPkrNam" prefWidth="160.0" text="Picker" />
-                                <TableColumn fx:id="tcPkrPrt" prefWidth="68.0" styleClass="numColumn" text="PRT" />
-                                <TableColumn fx:id="tcPkrDis" prefWidth="68.0" styleClass="numColumn" text="DIS" />
-                        <TableColumn fx:id="tcPkrCus" prefWidth="68.0" styleClass="numColumn" text="CUS" />
-                                <TableColumn fx:id="tcPkrPck" prefWidth="68.0" styleClass="numColumn" text="PCK" />
-                        <TableColumn fx:id="tcPkrPcm" prefWidth="68.0" styleClass="numColumn" text="PCM" />
-                                <TableColumn fx:id="tcPkrQua" prefWidth="68.0" styleClass="numColumn" text="QUA" />
-                                <TableColumn fx:id="tcPkrCpu" prefWidth="68.0" styleClass="numColumn" text="CPU" />
-                                <TableColumn fx:id="tcPkrWgh" prefWidth="68.0" styleClass="numColumn" text="WGH" />
-                                <TableColumn fx:id="tcPkrShp" prefWidth="68.0" styleClass="numColumn" text="SHP" />
-                                <TableColumn fx:id="tcPkrInv" prefWidth="68.0" styleClass="numColumn" text="INV" />
-                                <TableColumn fx:id="tcPkrTot" prefWidth="68.0" styleClass="numColumn" text="Total" />
-                        <TableColumn fx:id="tcPkrCrtn" prefWidth="68.0" styleClass="numColumn" text="Total&#10;Cartons" />
+                                <TableColumn fx:id="tcPkrNam" minWidth="160.0" prefWidth="160.0" text="Picker" />
+                                <TableColumn fx:id="tcPkrPrt" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="PRT" />
+                                <TableColumn fx:id="tcPkrDis" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="DIS" />
+                        <TableColumn fx:id="tcPkrCus" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="CUS" />
+                                <TableColumn fx:id="tcPkrPck" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="PCK" />
+                        <TableColumn fx:id="tcPkrPcm" prefWidth="60.0" styleClass="numColumn" text="PCM" />
+                                <TableColumn fx:id="tcPkrQua" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="QUA" />
+                                <TableColumn fx:id="tcPkrCpu" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="CPU" />
+                                <TableColumn fx:id="tcPkrWgh" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="WGH" />
+                                <TableColumn fx:id="tcPkrShp" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="SHP" />
+                                <TableColumn fx:id="tcPkrInv" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="INV" />
+                                <TableColumn fx:id="tcPkrTot" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="Total" />
+                        <TableColumn fx:id="tcPkrCrtn" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="Total&#10;Cartons" />
                             </columns>
                         </TableView>
                   <VBox fx:id="vBoxKpi">
                      <children>
+                     <!--   <Label fx:id="kpiCaption" text="Label" visible="false" /> -->
            <!--             <HBox alignment="CENTER">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

@@ -55,6 +55,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
@@ -64,6 +65,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
@@ -72,7 +74,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -293,6 +297,8 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
     private Button btnAutoRefresh;
     @FXML
     private Spinner<Integer> spnRefInt;
+//     @FXML
+//    private Label kpiCaption;
 
     private PtktSum ptktSum;
     private PtktFilter ptktFilter;
@@ -307,6 +313,8 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
     private int conFailCnt = 0;
     private final String DTL_BY_PKP = "PTK";
     private final String DTL_BY_CRT = "CRT";
+    private final String PKR_NAME = "Picker";
+  //          final TextField caption = new TextField();
     //private List<KpiTblRow> kpiTbl = new ArrayList();
 
     @Override
@@ -482,8 +490,8 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
             addKpi();
         } else {
             removeKpi();
-
         }
+        autoFitTable(tblPkrSum);
 
     }
 
@@ -744,18 +752,39 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
         lblSdsTotShipped.setText(kpiTblRow.getNumShpString());
         lblSdsPctShipped.setText(kpiTblRow.getPctShpString());
 
-        ObservableList<PieChart.Data> kpiObsList = FXCollections.observableArrayList(new PieChart.Data("Open " + kpiTblRow.getNumOpenString(), kpiTblRow.getNumOpen().getValue()),
+        
+        ObservableList<PieChart.Data> kpiObsList = FXCollections.observableArrayList(new PieChart.Data("Open " + kpiTblRow.getNumOpenString(), 
+                kpiTblRow.getNumOpen().getValue()),
                 new PieChart.Data("Shipped " + kpiTblRow.getNumShpString(), kpiTblRow.getNumShpValue())
         );
-
-        piSameDayShip.setData(kpiObsList);
         
+
+ //kpiCaption.getStyleClass().add("pieCaption");
+ //vBoxKpi.getChildren().remove( kpiCaption);
+ //caption.getChildrenUnmodifiable().add(vBoxKpi);
+
+
+       
+        piSameDayShip.setData(kpiObsList);
+//         for (final PieChart.Data data : piSameDayShip.getData()) {
+//    data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent e) -> {
+//         vBoxKpi.getChildren().add( kpiCaption);
+//        kpiCaption.setVisible(true);
+//        kpiCaption.getChildrenUnmodifiable().add(vBoxKpi);
+//        kpiCaption.setOpacity(1.0);
+//        kpiCaption.setTranslateX(e.getSceneX());
+//        kpiCaption.setTranslateY(e.getSceneY());
+//        kpiCaption.setText(String.valueOf(data.getPieValue()) + "% position x =" + e.getSceneX() + "yposition = " + kpiCaption.getTranslateY() );
+//        System.out.println("caption is " + kpiCaption.getText());
+//    });
+//}
+
 
         kpiTblRow = ptktSum.getKpiTblMap().get(AppParms.TORD);
         lblTodayDropped.setText(kpiTblRow.getNumPrtString());
         lblTodayShipped.setText(kpiTblRow.getNumShpString());
         lblTodayPctShipped.setText(kpiTblRow.getPctShpString());
-        
+
         ObservableList<PieChart.Data> kpiTordObsList = FXCollections.observableArrayList(new PieChart.Data("Open " + kpiTblRow.getNumOpenString(), kpiTblRow.getNumOpen().getValue()),
                 new PieChart.Data("Shipped " + kpiTblRow.getNumShpString(), kpiTblRow.getNumShpValue())
         );
@@ -1623,7 +1652,70 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
         });
 //
         tblPkrSum.setItems(ptktByPkrTblRow);
+        autoFitTable(tblPkrSum);
+        //tblPkrSum.autosize();
         prInRefresh.setVisible(false);
+    }
+
+    private void autoFitTable(TableView<?> table) {
+        double tableSize = 0;
+        if (cbShowKPI.isSelected()) {
+            table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+            for (TableColumn<?, ?> col : table.getColumns()) {
+                Text t = new Text(col.getText());
+                double max = t.getLayoutBounds().getWidth();
+                for (int i = 0; i < table.getItems().size(); i++) {
+                    //cell must not be empty
+                    if (col.getCellData(i) != null) {
+                        t = new Text(col.getCellData(i).toString());
+                        double calcwidth = t.getLayoutBounds().getWidth();
+                        //remember new max-width
+                        if (calcwidth > max) {
+                            max = calcwidth;
+                        }
+                    }
+                }
+                //set the new max-widht with some extra space
+                col.setPrefWidth(max + 10.0d);
+                tableSize = tableSize + col.getPrefWidth();
+            }
+            tableSize = tableSize + 120d;
+        } else {
+            for (TableColumn<?, ?> col : table.getColumns()) {
+                if (col.getText().equals(PKR_NAME)) {
+                    col.setPrefWidth(160d);
+                    tableSize = tableSize + 160d;
+                } else {
+                    col.setPrefWidth(60d);
+                    tableSize = tableSize + 60d;
+                }
+               // System.out.println("columnName is " + col.getText() + " width = " + col.getPrefWidth());
+            }
+tableSize = tableSize + 30d;
+        }
+        table.setPrefWidth(tableSize);
+
+//        table.getColumns().forEach(col -> {
+//       Text t = new Text( col.getText() );
+//        double max = t.getLayoutBounds().getWidth();
+//        for ( int i = 0; i < table.getItems().size(); i++ )
+//        {
+//            //cell must not be empty
+//            if ( col.getCellData( i ) != null )
+//            {
+//                t = new Text( col.getCellData( i ).toString() );
+//                double calcwidth = t.getLayoutBounds().getWidth();
+//                //remember new max-width
+//                if ( calcwidth > max )
+//                {
+//                    max = calcwidth;
+//                }
+//            }
+//        }
+//        //set the new max-widht with some extra space
+//        col.setPrefWidth( max + 10.0d );
+//        //tableSize = tableSize + 10d;
+//        });
     }
 
     private void bldSumPrd(ArrayList<PtktSumByPrd> sumByPrdList) {

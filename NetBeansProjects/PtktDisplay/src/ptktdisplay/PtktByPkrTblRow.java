@@ -69,7 +69,7 @@ public class PtktByPkrTblRow {
     public PtktByPkrTblRow(PtktSumByPkr sumByPkr) {
 
         ArrayList<PtktSumByStat> sumByStatList = new ArrayList<>();
-        this.nam = new SimpleStringProperty(sumByPkr.getPicker());
+        this.nam = new SimpleStringProperty(sumByPkr.getPicker().trim());
         sumByStatList = sumByPkr.getSumByStat();
         int wTot = 0;
         int wPrt = 0;

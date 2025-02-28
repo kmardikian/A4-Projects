@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -59,6 +60,7 @@ public class PtkCarton implements Comparable<PtkCarton> {
     private final BigDecimal orPrl;
     private final String pkhDisF;
     private final Double orPrtTime;
+    private LocalDate trgShipDt;
     private int row;
 
     public PtkCarton(BigDecimal crtnNo, BigDecimal ptktNo, BigDecimal ordNo, String soldTo,
@@ -152,7 +154,42 @@ public class PtkCarton implements Comparable<PtkCarton> {
             this.stgETim = stgETim;
             }
         }
+        calctrgShipDt();
 
+    }
+     private void calctrgShipDt() {
+        WhseCutoffData cutoff;
+        DecimalFormat dateFmt = new DecimalFormat("00000000");
+        String sPrtDt = dateFmt.format(this.prtDate);
+        String sprtYY = sPrtDt.substring(0,4);
+        String sprtMM = sPrtDt.substring(4,6);
+        String sprtDD = sPrtDt.substring(6, 8);
+        String sPrtDt2 = sprtYY + "-" + sprtMM + "-" + sprtDD;   
+        
+        if (AppParms.getWhseCutoffData().containsKey(this.getWhse())) {
+                cutoff = AppParms.getWhseCutoffData().get(this.getWhse());
+        
+        
+        this.trgShipDt = LocalDate.parse(sPrtDt2);
+        if (this.prtTime > cutoff.getCutOffTime()) {
+            this.trgShipDt =this.trgShipDt.plusDays(1);
+        }
+        if (this.pkhDisF.endsWith("Y")) {
+            adjustforDisDate();
+        }
+        }
+    }
+    private void adjustforDisDate() {
+        DayOfWeek dayOfWeek = this.trgShipDt.getDayOfWeek();
+        int iWeekDay= dayOfWeek.getValue();
+        int adjDt = 0;
+        if (iWeekDay < 3) {
+            adjDt = iWeekDay + 7 - 3;
+        } else {
+            adjDt = iWeekDay - 3;
+        }
+        adjDt = 9 - adjDt; 
+        this.trgShipDt = this.trgShipDt.plusDays(adjDt);
     }
 
     public String getPeriod() {
@@ -353,5 +390,14 @@ public class PtkCarton implements Comparable<PtkCarton> {
         }
         return result;
     }
+
+    public LocalDate getTrgShipDt() {
+        return trgShipDt;
+    }
+
+    public void setTrgShipDt(LocalDate trgShipDt) {
+        this.trgShipDt = trgShipDt;
+    }
+    
 
 }

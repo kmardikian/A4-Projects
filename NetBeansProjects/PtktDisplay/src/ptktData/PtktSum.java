@@ -242,7 +242,8 @@ public class PtktSum {
                 cutoff = AppParms.getWhseCutoffData().get(ptktEnt.getWhse());
 
                 if (ptktEnt.getPrtDate().compareTo(getCurDtNum()) == 0
-                        && !ptktEnt.getStatus().equals(AppParms.DIS_STAT_NAME)) {
+                        && !ptktEnt.getPkhDisF().equals("Y")) {
+                        // && !ptktEnt.getStatus().equals(AppParms.DIS_STAT_NAME)) {
 
                     if (ptktEnt.getOrPrtTime().compareTo(cutoff.getCutOffTime()) <= 0) {
 
