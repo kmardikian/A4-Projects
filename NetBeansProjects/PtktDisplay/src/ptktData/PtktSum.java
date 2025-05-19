@@ -11,11 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import static ptktData.AppParms.B4_1ORD;
 import static ptktData.AppParms.TORD;
 import ptktdisplay.KpiTblRow;
+import static ptktData.AppParms.B4_5PM_ORD;
 
 /**
  *
@@ -23,17 +22,18 @@ import ptktdisplay.KpiTblRow;
  */
 public class PtktSum {
 
-    private ArrayList<PtktByPtkt> ptktList = new ArrayList<>();
+    private final ArrayList<PtktByPtkt> ptktList = new ArrayList<>();
     private ArrayList<PtkCarton> ptkCartonList = new ArrayList<>();
-    private ArrayList<PtktPrd> ptktPrdList = new ArrayList<>();
-    private ArrayList<KpiTblRow> kpiTbl = new ArrayList();
-    private Map<BigDecimal, PtktByPtkt> ptktByPtk = new HashMap<>();
-    private Map<String, PtktSumByStat> ptktStatMap = new HashMap<>();
-    private Map<String, PtktSumByPrd> ptktPrdMap = new HashMap<>();
-    private Map<String, PtktSumByPkr> ptktPkrMap = new HashMap<>();
-    private Map<String, KpiTblRow> kpiTblMap = new HashMap<>();
-    private Double curDtNum;
-    private String curDt;
+   // private ArrayList<PtktPrd> ptktPrdList = new ArrayList<>();
+    private final ArrayList<PtktPrd> ptktPrdList;
+    private final ArrayList<KpiTblRow> kpiTbl = new ArrayList();
+    private final Map<BigDecimal, PtktByPtkt> ptktByPtk = new HashMap<>();
+    private final Map<String, PtktSumByStat> ptktStatMap = new HashMap<>();
+    private final Map<String, PtktSumByPrd> ptktPrdMap = new HashMap<>();
+    private final Map<String, PtktSumByPkr> ptktPkrMap = new HashMap<>();
+    private final Map<String, KpiTblRow> kpiTblMap = new HashMap<>();
+    private final Double curDtNum;
+    private final String curDt;
 
     public PtktSum() {
         SimpleDateFormat datFmt = new SimpleDateFormat("yyyyMMdd");
@@ -230,47 +230,89 @@ public class PtktSum {
     }
 
     void sumKpi() {
-        int b41pm_open = 0;
-        int b41pm_shipped = 0;
+//        int b41pm_open = 0;
+//        int b41pm_shipped = 0;
         int todayOpen = 0;
         int todayShipped = 0;
+        int b4_4pm_open = 0;
+        int b4_4pm_shipped = 0;
+
         WhseCutoffData cutoff;
 
         for (PtktByPtkt ptktEnt : ptktList) {
 
             if (AppParms.getWhseCutoffData().containsKey(ptktEnt.getWhse())) {
                 cutoff = AppParms.getWhseCutoffData().get(ptktEnt.getWhse());
-
-                if (ptktEnt.getPrtDate().compareTo(getCurDtNum()) == 0
-                        && !ptktEnt.getPkhDisF().equals("Y")) {
-                        // && !ptktEnt.getStatus().equals(AppParms.DIS_STAT_NAME)) {
-
-                    if (ptktEnt.getOrPrtTime().compareTo(cutoff.getCutOffTime()) <= 0) {
-
-                        if (ptktEnt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
-                            b41pm_shipped++;
-                        } else {
-                            b41pm_open++;
-                        }
-                    }
+                if (AppParms.kpiIsPckSel(AppParms.TORD, ptktEnt ) ) {
                     if (ptktEnt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
                         todayShipped++;
                     } else {
                         todayOpen++;
                     }
                 }
-            }
+                }  
+            if (AppParms.kpiIsPckSel(AppParms.B4_5PM_ORD, ptktEnt ) )  {
+                    if (ptktEnt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
+                        //System.out.println("shipped " + ptktEnt.getPtktNo() + " " + ptktEnt.getPrtDtTm());
+                        b4_4pm_shipped++;
+                    } else {
+                        b4_4pm_open++;
+                        //System.out.println("Open " + ptktEnt.getPtktNo() + " " + ptktEnt.getPrtDtTm());
+                    }
+                }
+             
+
+//                if (ptktEnt.getPrtDate().compareTo(getCurDtNum()) == 0
+//                        && !ptktEnt.getPkhDisF().equals("Y")) {
+                    //2 && !ptktEnt.getStatus().equals(AppParms.DIS_STAT_NAME)) {
+
+// 2                   if (ptktEnt.getOrPrtTime().compareTo(cutoff.getCutOffTime()) <= 0) {
+//2
+// 2                       if (ptktEnt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
+//  2                          b41pm_shipped++;
+//   2                     } else {
+//    2                        b41pm_open++;
+//     2                   }
+//      2              }
+//                    if (ptktEnt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
+//                        todayShipped++;
+//                    } else {
+//                        todayOpen++;
+//                    }
+
+  //              }
+//                if (ptktEnt.getPrtDtTm().isAfter(cutoff.getlDtm_DayB4())
+//                        && ptktEnt.getPrtDtTm().isBefore(cutoff.lDtm_DayCur)
+//                        && !ptktEnt.getPkhDisF().equals("Y")) {
+//                    if (ptktEnt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
+//                        //System.out.println("shipped " + ptktEnt.getPtktNo() + " " + ptktEnt.getPrtDtTm());
+//                        b4_4pm_shipped++;
+//                    } else {
+//                        b4_4pm_open++;
+//                        //System.out.println("Open " + ptktEnt.getPtktNo() + " " + ptktEnt.getPrtDtTm());
+//                    }
+//                }
+// 2               if (ptktEnt.getPtktNo().equals(BigDecimal(0))) {
+// 2                   System.out.println(ptktEnt.getPtktNo() + " " + ptktEnt.getPrtDate().toString());
+// 2                   
+// 2               }
+
+ //           }
         }
 
         KpiTblRow kpiRow;
 
-        kpiRow = new KpiTblRow(B4_1ORD, b41pm_open, b41pm_shipped);
-        kpiTblMap.put(B4_1ORD, kpiRow);
-        this.kpiTbl.add(kpiRow);
+//        kpiRow = new KpiTblRow(B4_1ORD, b41pm_open, b41pm_shipped);
+//        kpiTblMap.put(B4_1ORD, kpiRow);
+//        this.kpiTbl.add(kpiRow);
 
         kpiRow = new KpiTblRow(TORD, todayOpen, todayShipped);
         kpiTblMap.put(TORD, kpiRow);
         this.kpiTbl.add(kpiRow);
+
+        kpiRow = new KpiTblRow(B4_5PM_ORD, b4_4pm_open, b4_4pm_shipped);
+        this.kpiTbl.add(kpiRow);
+        kpiTblMap.put(B4_5PM_ORD, kpiRow);
 
     }
 

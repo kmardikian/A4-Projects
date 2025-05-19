@@ -115,6 +115,8 @@ public class CNTLP {
   
           Statement stmt;
           String Qry = "Select CNELK "
+                  + ",cndes"
+                  + ",cnva1"
                   + ",cnva2 "
                   + "from " + dtaLib + ".CNTLP a "
                   + "Where cnelt = 'W4' "
@@ -128,8 +130,12 @@ public class CNTLP {
                 cutOff = rs.getBigDecimal("CNVA2")
                         .multiply(BigDecimal.valueOf(10000))
                         .doubleValue();
+                String db4CutOffHH = rs.getString("CNVA1").substring(0,2);
+                String db4CutOffMM = rs.getString("CNVA1").substring(3,5);
+                String b4_5Pm_priDtm = rs.getString("CNDES").substring(0,14);
+                String b4_5Pm_curDtm = rs.getString("CNDES").substring(15,29); 
                         
-                whseCutoffData.put(whse, new WhseCutoffData(whse,cutOff));
+                whseCutoffData.put(whse, new WhseCutoffData(whse,b4_5Pm_priDtm,b4_5Pm_curDtm,cutOff));
                 
             }
         } catch (SQLException ex) {

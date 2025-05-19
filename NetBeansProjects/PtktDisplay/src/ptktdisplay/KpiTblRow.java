@@ -27,12 +27,16 @@ public class KpiTblRow implements Comparable<KpiTblRow> {
         this.numOpen = new SimpleIntegerProperty(numOpen);
         this.numShp = new SimpleIntegerProperty(numShp);
         this.numPrt = new SimpleIntegerProperty(numOpen + numShp);
+        Integer  totOrder  = numOpen + numShp;
+       
         
-        BigDecimal pctShip = BigDecimal.ZERO;
+        BigDecimal pctShip;
+
         if (numOpen > 0) {
             pctShip = BigDecimal.valueOf(numShp)
-                    .multiply(BigDecimal.valueOf(100)
-                            .divide(BigDecimal.valueOf(numOpen + numShp), 2, RoundingMode.HALF_EVEN));
+                    .multiply(BigDecimal.valueOf(100))
+                            .divide(BigDecimal.valueOf(totOrder) ,2,RoundingMode.HALF_UP) ;
+                        //    .divide(BigDecimal.valueOf(numOpen + numShp), 2, RoundingMode.HALF_UP));
         } else {
             pctShip = BigDecimal.valueOf(100.00);
         }

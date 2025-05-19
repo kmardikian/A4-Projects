@@ -32,22 +32,22 @@
                         <Button fx:id="btnPrint" mnemonicParsing="false" onAction="#btnPrtClicked" text="Print" />
                         <Button fx:id="btnRefresh" disable="true" mnemonicParsing="false" onAction="#refreshBtnClicked" text="Refresh" />
                         <Button fx:id="btnDspDtl" disable="true" mnemonicParsing="false" onAction="#dspDetailClicked" text="Display Detail" />
-                  <Button fx:id="btnDspCrtDtl" mnemonicParsing="false" onAction="#dspCrtDetailClicked" text="DisplayCartonDetail" />
+                        <Button fx:id="btnDspCrtDtl" mnemonicParsing="false" onAction="#dspCrtDetailClicked" text="DisplayCartonDetail" />
                         <Button fx:id="btnFilter" mnemonicParsing="false" onAction="#btnFilterClicked" text="Filter" />
                         <Button fx:id="btnAutoRefresh" mnemonicParsing="false" onAction="#btnAutoRefreshClicked" text="Stop Auto Refresh" />
                         <Label styleClass="tbarlbl" text="Refresh Interval in seconds" />
                         <Spinner fx:id="spnRefInt" prefHeight="22.0" prefWidth="60.0" />
-                  <Label prefHeight="14.0" prefWidth="35.0" text="As Of:" />
-                  <Label fx:id="lblRefTime" styleClass="varData" text=" " />
-                  <ProgressIndicator fx:id="prInRefresh" prefHeight="12.0" prefWidth="52.0" progress="0.0" />
-                  <Label text="Detail Display Option" />
-                  <RadioButton fx:id="rbPckp" mnemonicParsing="false" selected="true" text="by Pick Ticket">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="tglDspDtlBy" />
-                     </toggleGroup>
-                  </RadioButton>
-                  <RadioButton fx:id="rbCrtDtl" mnemonicParsing="false" text="By Carton " toggleGroup="$tglDspDtlBy" />
-                  <CheckBox fx:id="cbShowKPI" mnemonicParsing="false" onAction="#cbShowKpiClicked" selected="true" text="Show KPI" />
+                        <Label prefHeight="14.0" prefWidth="35.0" text="As Of:" />
+                        <Label fx:id="lblRefTime" styleClass="varData" text=" " />
+                        <ProgressIndicator fx:id="prInRefresh" prefHeight="12.0" prefWidth="52.0" progress="0.0" />
+                        <Label text="Detail Display Option" />
+                        <RadioButton fx:id="rbPckp" mnemonicParsing="false" selected="true" text="by Pick Ticket">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="tglDspDtlBy" />
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="rbCrtDtl" mnemonicParsing="false" text="By Carton " toggleGroup="$tglDspDtlBy" />
+                        <CheckBox fx:id="cbShowKPI" mnemonicParsing="false" onAction="#cbShowKpiClicked" selected="true" text="Show KPI" />
                     </items>
                 </ToolBar>
                 <HBox fx:id="hboxTop" prefHeight="279.0" prefWidth="1344.0" spacing="5.0" VBox.vgrow="ALWAYS">
@@ -68,116 +68,143 @@
                                 <TableColumn fx:id="tcPkrNam" minWidth="160.0" prefWidth="160.0" text="Picker" />
                                 <TableColumn fx:id="tcPkrPrt" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="PRT" />
                                 <TableColumn fx:id="tcPkrDis" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="DIS" />
-                        <TableColumn fx:id="tcPkrCus" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="CUS" />
+                                <TableColumn fx:id="tcPkrCus" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="CUS" />
                                 <TableColumn fx:id="tcPkrPck" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="PCK" />
-                        <TableColumn fx:id="tcPkrPcm" prefWidth="60.0" styleClass="numColumn" text="PCM" />
+                                <TableColumn fx:id="tcPkrPcm" prefWidth="60.0" styleClass="numColumn" text="PCM" />
                                 <TableColumn fx:id="tcPkrQua" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="QUA" />
                                 <TableColumn fx:id="tcPkrCpu" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="CPU" />
                                 <TableColumn fx:id="tcPkrWgh" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="WGH" />
                                 <TableColumn fx:id="tcPkrShp" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="SHP" />
                                 <TableColumn fx:id="tcPkrInv" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="INV" />
                                 <TableColumn fx:id="tcPkrTot" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="Total" />
-                        <TableColumn fx:id="tcPkrCrtn" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="Total&#10;Cartons" />
+                                <TableColumn fx:id="tcPkrCrtn" minWidth="40.0" prefWidth="60.0" styleClass="numColumn" text="Total&#10;Cartons" />
                             </columns>
                         </TableView>
-                  <VBox fx:id="vBoxKpi">
-                     <children>
-                     <!--   <Label fx:id="kpiCaption" text="Label" visible="false" /> -->
-           <!--             <HBox alignment="CENTER">
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin>
-                        </HBox>
-            -->           
-                        <Accordion fx:id="accoKpi">
-                          <panes>
-                            <TitledPane fx:id="tpKpitblDta" animated="false" text="KPI Table view ">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                       <children>
-                                          <ScrollPane>
-                                             <content>
+                        <VBox fx:id="vBoxKpi">
+                            <children>
+                                <!--   <Label fx:id="kpiCaption" text="Label" visible="false" /> -->
+                                <!--             <HBox alignment="CENTER">
+                                               <VBox.margin>
+                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                               </VBox.margin>
+                                            </HBox>
+                                -->           
+                                <Accordion fx:id="accoKpi">
+                                    <panes>
+                                        <TitledPane fx:id="tpKpitblDta" animated="false" text="KPI Table view ">
+                                            <content>
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                    <children>
+                                                        <ScrollPane>
+                                                            <content>
                                                
-      <!--                                           <StackPane layoutX="19.600000381469727" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-      -->
-                                               <!--      <children> -->
-                                                      <TableView fx:id="tblKpi" accessibleRole="BUTTON" minWidth="-Infinity">
-                                                        <columns>
-                                                          <TableColumn fx:id="tcKpiDescription" maxWidth="400.0" minWidth="150.0" prefWidth="150.0" text="Description" />
-                                                          <TableColumn fx:id="tcKpiTktsPrinted" maxWidth="-1.0" minWidth="60.0" prefWidth="60.0" styleClass="numColumn" text="Tickets &#10;Printed" />
-                                                            <TableColumn fx:id="tcKpiTktsShip" maxWidth="-1.0" minWidth="60.0" prefWidth="60.0" styleClass="numColumn" text="Shipped" />
-                                                            <TableColumn fx:id="tcKpiTktsPctShip" maxWidth="-1.0" minWidth="60.0" prefWidth="60.0" styleClass="numColumn" text="\% Shipped" />
-                                                        </columns>
-                                                      </TableView>
-                                             </content>
-                                          </ScrollPane>
-                                           <!--  </children> -->
-                                        <!--  </StackPane> -->
-                                       </children></AnchorPane>
-                              </content>
-                            </TitledPane>
-                               <TitledPane fx:id="tpKpi" text="Same Day B4 1 PM  Ship KPI Pie Chart">
-  <!--                         <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </VBox.margin>
-  -->                                                            
-                           <content>
-                              <VBox>
-                                 <children>
-                                    <HBox>
-                                       <children>
-                                          <Label text="Tkts prt. B4 1:00 PM" />
-                                          <Label fx:id="lblSdsTotDropped" styleClass="varData">
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </Label>
-                                          <Label text="Shipped">
-                                             <HBox.margin>
-                                                <Insets left="5.0" />
-                                             </HBox.margin>
-                                          </Label>
-                                          <Label fx:id="lblSdsTotShipped" styleClass="varData" />
-                                          <Label text="\% Shipped" />
-                                          <Label fx:id="lblSdsPctShipped" styleClass="varData" />
-                                       </children>
-                                    </HBox>
-                                    <PieChart fx:id="piSameDayShip" labelsVisible="false" legendSide="LEFT" />
-                                 </children>
-                              </VBox>
-                           </content>
-                        </TitledPane>
-                            <TitledPane animated="false" text="Today ship KPI Pie Chart">
-                              <content> 
-                                  <VBox>
-                                      <children>
-                                      <HBox>
-                                          <children>
-                                              <Label text="Tkts Today" />
-                                              <Label fx:id="lblTodayDropped" styleClass="varData">
-                                                  <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                              </Label>
-                                              <Label text="Shipped">
-                                             <HBox.margin>
-                                                <Insets left="5.0" />
-                                             </HBox.margin>
-                                              </Label>
-                                              <Label fx:id="lblTodayShipped" styleClass="varData" />
-                                          <Label text="\% Shipped" />
-                                          <Label fx:id="lblTodayPctShipped" styleClass="varData" />
-                                          </children>
-                                      </HBox>
-                                      <PieChart fx:id="piTodayShip" labelsVisible="false" legendSide="LEFT" />
-                                      </children>
-                                  </VBox>
-                              </content>  
-                            </TitledPane>
-                          </panes>
-                        </Accordion>
-                     </children>
-                  </VBox>
+                                                                <!--                                           <StackPane layoutX="19.600000381469727" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                                                                -->
+                                                                <!--      <children> -->
+                                                                <TableView fx:id="tblKpi" accessibleRole="BUTTON" minWidth="-Infinity">
+                                                                    <columns>
+                                                                        <TableColumn fx:id="tcKpiDescription" maxWidth="400.0" minWidth="150.0" prefWidth="150.0" text="Description" />
+                                                                        <TableColumn fx:id="tcKpiTktsPrinted" maxWidth="-1.0" minWidth="60.0" prefWidth="60.0" styleClass="numColumn" text="Tickets &#10;Printed" />
+                                                                        <TableColumn fx:id="tcKpiTktsShip" maxWidth="-1.0" minWidth="60.0" prefWidth="60.0" styleClass="numColumn" text="Shipped" />
+                                                                        <TableColumn fx:id="tcKpiTktsOpen" maxWidth="-1.0" minWidth="60.0" prefWidth="60.0" styleClass="numColumn" text="Open" />
+                                                                        <TableColumn fx:id="tcKpiTktsPctShip" maxWidth="-1.0" minWidth="60.0" prefWidth="60.0" styleClass="numColumn" text="\% Shipped" />
+                                                                    </columns>
+                                                                </TableView>
+                                                            </content>
+                                                        </ScrollPane>
+                                                        <!--  </children> -->
+                                                        <!--  </StackPane> -->
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </TitledPane>
+                                        <!--                          <TitledPane fx:id="tpKpi" text="Same Day B4 1 PM  Ship KPI Pie Chart">
+                                             <content>
+                                              <VBox>
+                                                 <children>
+                                                    <HBox>
+                                                       <children>
+                                                          <Label text="Tkts prt. B4 1:00 PM" />
+                                                          <Label fx:id="lblSdsTotDropped" styleClass="varData">
+                                                             <HBox.margin>
+                                                                <Insets />
+                                                             </HBox.margin>
+                                                          </Label>
+                                                          <Label text="Shipped">
+                                                             <HBox.margin>
+                                                                <Insets left="5.0" />
+                                                             </HBox.margin>
+                                                          </Label>
+                                                          <Label fx:id="lblSdsTotShipped" styleClass="varData" />
+                                                          <Label text="\% Shipped" />
+                                                          <Label fx:id="lblSdsPctShipped" styleClass="varData" />
+                                                       </children>
+                                                    </HBox>
+                                                    <PieChart fx:id="piSameDayShip" labelsVisible="false" legendSide="LEFT" />
+                                                 </children>
+                                              </VBox>
+                                           </content>
+                                        </TitledPane> -->
+                                        <TitledPane animated="false" text="Today ship KPI Pie Chart">
+                                            <content> 
+                                                <VBox>
+                                                    <children>
+                                                        <HBox>
+                                                            <children>
+                                                                <Label text="Tkts Today" />
+                                                                <Label fx:id="lblTodayDropped" styleClass="varData">
+                                                                    <HBox.margin>
+                                                                        <Insets />
+                                                                    </HBox.margin>
+                                                                </Label>
+                                                                <Label text="Shipped">
+                                                                    <HBox.margin>
+                                                                        <Insets left="5.0" />
+                                                                    </HBox.margin>
+                                                                </Label>
+                                                                <Label fx:id="lblTodayShipped" styleClass="varData" />
+                                                                <Label text="\% Shipped" />
+                                                                <Label fx:id="lblTodayPctShipped" styleClass="varData" />
+                                                            </children>
+                                                        </HBox>
+                                                        <PieChart fx:id="piTodayShip" labelsVisible="false" legendSide="LEFT" />
+                                                    </children>
+                                                </VBox>
+                                            </content>  
+                                        </TitledPane>
+                                        <!-- b4 4pm start -->
+                                        <TitledPane animated="false" text="B4 5pm Orders ship KPI Pie Chart">
+                                            <content> 
+                                                <VBox>
+                                                    <children>
+                                                        <HBox>
+                                                            <children>
+                                                                <Label text="Tkts B4 5pm" />
+                                                                <Label fx:id="lblB4pmDropped" styleClass="varData">
+                                                                    <HBox.margin>
+                                                                        <Insets />
+                                                                    </HBox.margin>
+                                                                </Label>
+                                                                <Label text="Shipped">
+                                                                    <HBox.margin>
+                                                                        <Insets left="5.0" />
+                                                                    </HBox.margin>
+                                                                </Label>
+                                                                <Label fx:id="lblB4pmShipped" styleClass="varData" />
+                                                                <Label text="\% Shipped" />
+                                                                <Label fx:id="lblB4pmPctShipped" styleClass="varData" />
+                                                            </children>
+                                                        </HBox>
+                                                        <PieChart fx:id="piB4pmShip" labelsVisible="false" legendSide="LEFT" />
+                                                    </children>
+                                                </VBox>
+                                            </content>  
+                                        </TitledPane>
+                                        <!-- b4 4pm end  -->
+                                    </panes>
+                                </Accordion>
+                            </children>
+                        </VBox>
                     </children>
                     <VBox.margin>
                         <Insets />
@@ -191,9 +218,9 @@
                                 <TableColumn fx:id="tcPrdPrd" prefWidth="75.0" text="Period" />
                                 <TableColumn fx:id="tcPrdPrt" prefWidth="50.0" styleClass="numColumn" text="PRT" />
                                 <TableColumn fx:id="tcPrdDis" prefWidth="50.0" styleClass="numColumn" text="DIS" />
-                        <TableColumn fx:id="tcPrdCus" prefWidth="50.0" styleClass="numColumn" text="CUS" />
+                                <TableColumn fx:id="tcPrdCus" prefWidth="50.0" styleClass="numColumn" text="CUS" />
                                 <TableColumn fx:id="tcPrdPck" prefWidth="50.0" styleClass="numColumn" text="PCK" />
-                        <TableColumn fx:id="tcPrdPcm" prefWidth="50.0" styleClass="numColumn" text="PCM" />
+                                <TableColumn fx:id="tcPrdPcm" prefWidth="50.0" styleClass="numColumn" text="PCM" />
                                 <TableColumn fx:id="tcPrdQua" prefWidth="50.0" styleClass="numColumn" text="QUA" />
                                 <TableColumn id=" " fx:id="tcPrdCpk" prefWidth="50.0" styleClass="numColumn" text="CPU" />
                                 <TableColumn fx:id="tcPrdWgh" prefWidth="50.0" styleClass="numColumn" text="WGH" />

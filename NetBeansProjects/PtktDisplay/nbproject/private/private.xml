@@ -3,8 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptktData/AppParms.java</file>
+            <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptkDetailByCrtn/PickTicketDetailByCrtnController.java</file>
+            <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptktData/PtktSum.java</file>
+            <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptktDetailDisplay/PickTicketDetailController.java</file>
+            <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptktData/PtktByPtkt.java</file>
+            <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptktData/PtkCarton.java</file>
             <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptktdisplay/FXMLDocumentController.java</file>
             <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptktdisplay/KpiTblRow.java</file>
+            <file>file:/W:/My%20Documents/NetBeansProjects/PtktDisplay/src/ptktdisplay/FXMLDocument.fxml</file>
         </group>
     </open-files>
 </project-private>

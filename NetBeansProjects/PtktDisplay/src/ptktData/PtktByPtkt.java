@@ -9,13 +9,14 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author Khatchik
  */
-public class PtktByPtkt  implements Comparable<PtktByPtkt>{
+public class PtktByPtkt  implements Comparable<PtktByPtkt>, PtktIntr{
     private final BigDecimal ptktNo;
     private final BigDecimal ordNo;
     private final String soldTo;
@@ -48,6 +49,7 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
     private BigDecimal orPrl;
     private LocalDate trgShipDt;
     private final String pkhDisF;
+    private LocalDateTime prtDtTm;
     private int row;
    
 
@@ -125,6 +127,10 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
         this.row = ptkCrt.getRow();
         this.pkhDisF = ptkCrt.getPkhDisF();
         this.trgShipDt = ptkCrt.getTrgShipDt();
+        String sPrtDtTime = dec8.format(this.prtDate)
+                + dec6.format(this.orPrtTime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        this.prtDtTm=LocalDateTime.parse(sPrtDtTime, formatter);
        // calctrgShipDt();
         
                 //LocalDate.parse(dateFmt.format(this.prtDate), dtFormat);
@@ -286,6 +292,10 @@ public class PtktByPtkt  implements Comparable<PtktByPtkt>{
 
     public String getPkhDisF() {
         return pkhDisF;
+    }
+
+    public LocalDateTime getPrtDtTm() {
+        return prtDtTm;
     }
     
     

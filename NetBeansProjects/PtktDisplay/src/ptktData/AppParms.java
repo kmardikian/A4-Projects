@@ -52,16 +52,18 @@ public class AppParms {
     public static final String SHP_STAT_NAME = "SHP";
     public static final String WGH_STAT_NAME = "WGH";
     public static final String INV_STAT_NAME = "INV";
+    public static final String OPN_STAT_NAME ="OPN";
     public static final String CPU_STAT_NUM = "49";
     public static final String UNASIGNED = "Unassigned";
     public static final String ALL = "*ALL";
-    public static final String TORD ="Today Total Orders";
-    public static final String B4_1ORD ="B4-1pm Orders";
+    public static final String TORD = "Today Total Orders";
+    //  public static final String B4_1ORD ="B4-1pm Orders";
+    public static final String B4_5PM_ORD = "B4 5pm Orders";
     private static final ZoneId PST = ZoneId.of("America/Los_Angeles");
     private final ZoneId dftZone = ZoneId.systemDefault();
-    private static Map<String,WhseCutoffData> whseCutoffData;
-       
-      /**
+    private static Map<String, WhseCutoffData> whseCutoffData;
+
+    /**
      * Period 2 Label
      */
     public static final String PRD2LBL = "04:00 am";
@@ -105,11 +107,10 @@ public class AppParms {
     public static final int PRD13ROW = 13;
     public static final String PRD14LBL = "> 3:00 pm";
     public static final int PRD14ROW = 14;
-   
 
     public AppParms(String systemName, String user, String userPassWord,
             String dataLib, String dftWrh) throws CustomException {
-        cntlp = new CNTLP( ConnectAs400.getLib());
+        cntlp = new CNTLP(ConnectAs400.getLib());
         whseCutoffData = cntlp.getWhseCutoffData();
         pstat = cntlp.getPtktStatList();
         pstat.add(new PtktStat(DIS_STAT_NAME, new BigDecimal(DIS_STAT_NUM)));
@@ -135,7 +136,7 @@ public class AppParms {
         this.dftWrh = dftWrh;
         SimpleDateFormat datFmt = new SimpleDateFormat("yyyyMMdd");
         curDate = datFmt.format(new Date());
-        
+
         if (!dftZone.equals(PST)) {
             adjPtkPrd();
         }
@@ -169,68 +170,109 @@ public class AppParms {
     public static ArrayList<PtktPrd> getPtktPrdList() {
         return ptktPrd;
     }
+
     public static ZonedDateTime dec2ZoneDt(BigDecimal dateCnv, BigDecimal timCnv)
-    throws Exception {
+            throws Exception {
         LocalDateTime ldt;
         ldt = LocalDateTime.now();
 
-        String dateFormat="yyyyMMdd HHmmss";
+        String dateFormat = "yyyyMMdd HHmmss";
         DecimalFormat decFmt8 = new DecimalFormat("00000000");
         DecimalFormat decFmt6 = new DecimalFormat("000000");
         String strDat = decFmt8.format(dateCnv);
         String strTim = decFmt6.format(timCnv);
         String strDatTime;
-        
+
         strDatTime = strDat
                 + " "
-                + strTim
-                ;
+                + strTim;
         try {
-        ldt = LocalDateTime.parse(strDatTime, DateTimeFormatter.ofPattern(dateFormat));
-        } catch(Exception ex) {
-            System.out.println("Invalid start date" + strDatTime );
+            ldt = LocalDateTime.parse(strDatTime, DateTimeFormatter.ofPattern(dateFormat));
+        } catch (Exception ex) {
+            System.out.println("Invalid start date" + strDatTime);
             throw new Exception("Invalid Date");
 
         }
-        
+
         ZonedDateTime pstTime = ldt.atZone(PST);
         ZonedDateTime rtnTime = pstTime.withZoneSameInstant(ZoneId.systemDefault());
         return rtnTime;
     }
-    
+
     private void adjPtkPrd() {
-        BigDecimal bCurDt= new BigDecimal(curDate);
+        BigDecimal bCurDt = new BigDecimal(curDate);
         DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("HHmmss");
         DateTimeFormatter dtFormatterLbl = DateTimeFormatter.ofPattern("hh:mm a");
-        Double adjTime;  
-        String adjTimeLbl ="";
-        ZonedDateTime datTime = ZonedDateTime.of(LocalDate.now(), LocalTime.now(), 
-                        ZoneId.systemDefault());
-        
-        for(PtktPrd prd : ptktPrd) {
-            if (prd.getPrdTim()== 990000.0 ) {
+        Double adjTime;
+        String adjTimeLbl = "";
+        ZonedDateTime datTime = ZonedDateTime.of(LocalDate.now(), LocalTime.now(),
+                ZoneId.systemDefault());
+
+        for (PtktPrd prd : ptktPrd) {
+            if (prd.getPrdTim() == 990000.0) {
                 prd.setPrdLbl("> " + adjTimeLbl);
-                
+
             } else {
                 try {
-                 datTime = dec2ZoneDt(bCurDt,new BigDecimal(prd.getPrdTim()) );
-                } catch(Exception ex ) {
-                    
+                    datTime = dec2ZoneDt(bCurDt, new BigDecimal(prd.getPrdTim()));
+                } catch (Exception ex) {
+
                 }
                 adjTime = new Double(datTime.format(dtFormatter));
-                adjTimeLbl= datTime.minusHours(1)
+                adjTimeLbl = datTime.minusHours(1)
                         .format(dtFormatterLbl);
-               prd.setPrdTim(adjTime);
-               prd.setPrdLbl(adjTimeLbl);
-                                    
+                prd.setPrdTim(adjTime);
+                prd.setPrdLbl(adjTimeLbl);
+
             }
-            
+
         }
     }
-    
-public static Map<String,WhseCutoffData> getWhseCutoffData() {
-    
-    return whseCutoffData;
-}    
+
+    public static Map<String, WhseCutoffData> getWhseCutoffData() {
+
+        return whseCutoffData;
+    }
+
+    public static boolean kpiIsPckSel(String kpiItem, PtktIntr ptkt) {
+        boolean ret = false;
+        if (AppParms.getWhseCutoffData().containsKey(ptkt.getWhse())) {
+            WhseCutoffData cutoff = getWhseCutoffData().get(ptkt.getWhse());
+
+            if (!ptkt.getPkhDisF().equals("Y")) {
+                if (kpiItem.equals(TORD)) {
+                    if (ptkt.getPrtDtTm().isAfter(cutoff.getlDtm_DayB4())) {
+                        ret = true;
+                    }
+                } else if (kpiItem.equals(B4_5PM_ORD)
+                        && ptkt.getPrtDtTm().isAfter(cutoff.getlDtm_DayB4())
+                        && ptkt.getPrtDtTm().isBefore(cutoff.lDtm_DayCur)) {
+                    ret = true;
+                }
+            }
+        }
+        return ret;
+    }
+
+//    public static boolean kpiIsCrtSel(String kpiItem, PtkCarton crt) {
+//        boolean ret = false;
+//        if (AppParms.getWhseCutoffData().containsKey(crt.getWhse())) {
+//            WhseCutoffData cutoff = getWhseCutoffData().get(crt.getWhse());
+//
+//            if (!crt.getPkhDisF().equals("Y")) {
+//                if (kpiItem.equals(TORD)) {
+//                    if (crt.getPrtDtTm().isAfter(cutoff.getlDtm_DayB4())) {
+//                        ret = true;
+//                    }
+//                } else if (kpiItem.equals(B4_5PM_ORD)
+//                        && crt.getPrtDtTm().isAfter(cutoff.getlDtm_DayB4())
+//                        && crt.getPrtDtTm().isBefore(cutoff.lDtm_DayCur)) {
+//                    ret = true;
+//                }
+//            }
+//        }
+//
+//        return ret;
+//    }
 
 }

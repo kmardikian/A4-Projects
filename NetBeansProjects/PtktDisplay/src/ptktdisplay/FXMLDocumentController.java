@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+//import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -31,8 +31,8 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+//import javafx.event.Event;
+//import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -190,22 +190,24 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
     private VBox vBoxKpi;
     @FXML
     private Accordion accoKpi;
-    @FXML
-    private TitledPane tpKpi;
+//    @FXML
+//    private TitledPane tpKpi;
     // @FXML
     // private TilePane tpKpiPi;
 
     // same day ship chart
-    @FXML
-    private Label lblSdsTotDropped;
-    @FXML
-    private Label lblSdsTotShipped;
-    @FXML
-    private Label lblSdsPctShipped;
-    @FXML
-    private PieChart piSameDayShip;
+//    @FXML
+//    private Label lblSdsTotDropped;
+//    @FXML
+//    private Label lblSdsTotShipped;
+//    @FXML
+//    private Label lblSdsPctShipped;
+//    @FXML
+//    private PieChart piSameDayShip;
     @FXML
     private PieChart piTodayShip;
+    @FXML
+    private PieChart piB4pmShip;
     @FXML
     private TitledPane tpKpitblDta;
     @FXML
@@ -223,6 +225,8 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
     @FXML
     private TableColumn<KpiTblRow, Double> tcKpiTktsPctShip;
     @FXML
+    private TableColumn<KpiTblRow, Integer> tcKpiTktsOpen; 
+    @FXML
     private Label lblTodayDropped;
 
     @FXML
@@ -230,6 +234,14 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
 
     @FXML
     private Label lblTodayPctShipped;
+    @FXML
+    private Label lblB4pmDropped;
+
+    @FXML
+    private Label lblB4pmShipped;
+
+    @FXML
+    private Label lblB4pmPctShipped;
 
     // pick ticket summary by period 
     @FXML
@@ -314,7 +326,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
     private final String DTL_BY_PKP = "PTK";
     private final String DTL_BY_CRT = "CRT";
     private final String PKR_NAME = "Picker";
-  //          final TextField caption = new TextField();
+    //          final TextField caption = new TextField();
     //private List<KpiTblRow> kpiTbl = new ArrayList();
 
     @Override
@@ -571,7 +583,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
     }
 
     public void dspDetailClicked(ActionEvent event) {
-        dspPckDetail(" ", " ", AppParms.ALL);
+        dspPckDetail(" ", " ", AppParms.ALL, "");
 
     }
 
@@ -609,7 +621,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
      * Display Carton Detail Button clicked
      */
     public void dspCrtDetailClicked(ActionEvent event) {
-        dspCrtDetail(" ", " ", AppParms.ALL);
+        dspCrtDetail(" ", " ", AppParms.ALL, " ");
 
     }
 
@@ -629,14 +641,22 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
 
     public void dspDetail(String prd, String stat, String oprPkr) {
         if (tglDspDtlBy.getSelectedToggle().getUserData().toString().equals(DTL_BY_PKP)) {
-            dspPckDetail(prd, stat, oprPkr);
+            dspPckDetail(prd, stat, oprPkr, "");
         } else {
-            dspCrtDetail(prd, stat, oprPkr);
+            dspCrtDetail(prd, stat, oprPkr, "");
         }
 
     }
 
-    public void dspPckDetail(String prd, String stat, String oprPkr) {
+    public void dspDetailKpi(String kpiItem, String stat) {
+        if (tglDspDtlBy.getSelectedToggle().getUserData().toString().equals(DTL_BY_PKP)) {
+        dspPckDetail(stTot, stat, stTot, kpiItem);
+        } else {
+            dspCrtDetail(stTot, stat, stTot, kpiItem);
+        }
+    }
+
+    public void dspPckDetail(String prd, String stat, String oprPkr, String kpiItem) {
 
         PickTicketDetailController ptktDtlCtl;
         if (prd.equals(stTot)) {
@@ -657,6 +677,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
             ptktDtlCtl.setFltrPrd(prd);
             ptktDtlCtl.setFltrStat(stat);
             ptktDtlCtl.setFltrPkr(oprPkr);
+            ptktDtlCtl.setFltrKpiItem(kpiItem);
             ptktDtlCtl.setPtktsum(ptktSum);
 
             ptktDtlCtl.loadDtlDsp();
@@ -688,7 +709,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
      * @param oprPkr Picker
      * @param ptkNo Pick ticket no
      */
-    private void dspCrtDetail(String prd, String stat, String oprPkr) {
+    private void dspCrtDetail(String prd, String stat, String oprPkr, String kpiItem) {
 
         PickTicketDetailByCrtnController ptktDtlCrtnCtl;
         if (prd.equals(stTot)) {
@@ -711,6 +732,7 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
             ptktDtlCrtnCtl.setFltrStat(stat);
             ptktDtlCrtnCtl.setFltrPkr(oprPkr);
             ptktDtlCrtnCtl.setFltrPtk(AppParms.ALL);
+            ptktDtlCrtnCtl.setFltrKpiItem(kpiItem);
             ptktDtlCrtnCtl.setPtktsum(ptktSum);
 
             ptktDtlCrtnCtl.bldCrtnDspl();
@@ -745,41 +767,19 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
         BigDecimal totalUnit = BigDecimal.ZERO;
         BigDecimal totalDlr = BigDecimal.ZERO;
 
-        KpiTblRow kpiTblRow = ptktSum.getKpiTblMap().get(AppParms.B4_1ORD);
+        KpiTblRow kpiTblRow;
+        //= ptktSum.getKpiTblMap().get(AppParms.B4_1ORD);
         //lblSdsTotDropped.setText(String.valueOf(b41pm_open + b41pm_shipped));
         //lblSdsTotShipped.setText(String.valueOf(b41pm_shipped));
-        lblSdsTotDropped.setText(kpiTblRow.getNumPrtString());
-        lblSdsTotShipped.setText(kpiTblRow.getNumShpString());
-        lblSdsPctShipped.setText(kpiTblRow.getPctShpString());
+//        lblSdsTotDropped.setText(kpiTblRow.getNumPrtString());
+//        lblSdsTotShipped.setText(kpiTblRow.getNumShpString());
+//        lblSdsPctShipped.setText(kpiTblRow.getPctShpString());
 
-        
-        ObservableList<PieChart.Data> kpiObsList = FXCollections.observableArrayList(new PieChart.Data("Open " + kpiTblRow.getNumOpenString(), 
-                kpiTblRow.getNumOpen().getValue()),
-                new PieChart.Data("Shipped " + kpiTblRow.getNumShpString(), kpiTblRow.getNumShpValue())
-        );
-        
-
- //kpiCaption.getStyleClass().add("pieCaption");
- //vBoxKpi.getChildren().remove( kpiCaption);
- //caption.getChildrenUnmodifiable().add(vBoxKpi);
-
-
-       
-        piSameDayShip.setData(kpiObsList);
-//         for (final PieChart.Data data : piSameDayShip.getData()) {
-//    data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent e) -> {
-//         vBoxKpi.getChildren().add( kpiCaption);
-//        kpiCaption.setVisible(true);
-//        kpiCaption.getChildrenUnmodifiable().add(vBoxKpi);
-//        kpiCaption.setOpacity(1.0);
-//        kpiCaption.setTranslateX(e.getSceneX());
-//        kpiCaption.setTranslateY(e.getSceneY());
-//        kpiCaption.setText(String.valueOf(data.getPieValue()) + "% position x =" + e.getSceneX() + "yposition = " + kpiCaption.getTranslateY() );
-//        System.out.println("caption is " + kpiCaption.getText());
-//    });
-//}
-
-
+//        ObservableList<PieChart.Data> kpiObsList = FXCollections.observableArrayList(new PieChart.Data("Open " + kpiTblRow.getNumOpenString(), 
+//                kpiTblRow.getNumOpen().getValue()),
+//                new PieChart.Data("Shipped " + kpiTblRow.getNumShpString(), kpiTblRow.getNumShpValue())
+//        );
+        // piSameDayShip.setData(kpiObsList);
         kpiTblRow = ptktSum.getKpiTblMap().get(AppParms.TORD);
         lblTodayDropped.setText(kpiTblRow.getNumPrtString());
         lblTodayShipped.setText(kpiTblRow.getNumShpString());
@@ -789,6 +789,16 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
                 new PieChart.Data("Shipped " + kpiTblRow.getNumShpString(), kpiTblRow.getNumShpValue())
         );
         piTodayShip.setData(kpiTordObsList);
+        // b4 4pm start 
+        kpiTblRow = ptktSum.getKpiTblMap().get(AppParms.B4_5PM_ORD);
+        lblB4pmDropped.setText(kpiTblRow.getNumPrtString());
+        lblB4pmShipped.setText(kpiTblRow.getNumShpString());
+        lblB4pmPctShipped.setText(kpiTblRow.getPctShpString());
+        ObservableList<PieChart.Data> kpiB4pmObsList = FXCollections.observableArrayList(new PieChart.Data("Open " + kpiTblRow.getNumOpenString(), kpiTblRow.getNumOpen().getValue()),
+                new PieChart.Data("Shipped " + kpiTblRow.getNumShpString(), kpiTblRow.getNumShpValue())
+        );
+        piB4pmShip.setData(kpiB4pmObsList);
+        // b4 4pm end.
         // piTodayShip.setData(kpiObsList);
         SimpleDateFormat datTimeFmt = new SimpleDateFormat("MM-dd-yy   hh:mm:ss a");
         String sDate = "";
@@ -888,7 +898,104 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
         }
         tcKpiDescription.setCellValueFactory(cellData -> cellData.getValue().getDescription());
         tcKpiTktsPrinted.setCellValueFactory(cellData -> cellData.getValue().getNumPrt().asObject());
+        tcKpiTktsPrinted.setCellFactory(tc -> {
+            TableCell<KpiTblRow, Integer> cell = new TableCell<KpiTblRow, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : item.toString());
+                    if ((!empty) && (item != 0)) {
+                        this.getStyleClass().add("selCell");
+                    } else {
+                        this.getStyleClass().remove("selCall");
+                    }
+                }
+            };
+
+            cell.setOnMouseClicked(e
+                    -> {
+                if (!cell.isEmpty()) {
+                    TableRow<KpiTblRow> tblRow;
+                    tblRow = cell.getTableRow();
+                    KpiTblRow myItem = tblRow.getItem();
+                    if (myItem.getNumPrt().getValue() != 0) {
+                        dspDetailKpi(myItem.getDescription().getValue(), stTot);
+                        // System.out.println("kpi mouse clicked " + myItem.getDescription().getValue() + " value " +  myItem.getNumPrt().getValue());
+                    }
+                }
+            }
+            );
+
+            return cell;
+        }
+        );
+
         tcKpiTktsShip.setCellValueFactory(cellData -> cellData.getValue().getNumShp().asObject());
+        tcKpiTktsShip.setCellFactory(tc -> {
+            TableCell<KpiTblRow, Integer> cell = new TableCell<KpiTblRow, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : item.toString());
+                    if ((!empty) && (item != 0)) {
+                        this.getStyleClass().add("selCell");
+                    } else {
+                        this.getStyleClass().remove("selCall");
+                    }
+                }
+            };
+
+            cell.setOnMouseClicked(e
+                    -> {
+                if (!cell.isEmpty()) {
+                    TableRow<KpiTblRow> tblRow;
+                    tblRow = cell.getTableRow();
+                    KpiTblRow myItem = tblRow.getItem();
+                    if (myItem.getNumPrt().getValue() != 0) {
+                        dspDetailKpi(myItem.getDescription().getValue(), "INV");
+                        // System.out.println("kpi mouse clicked " + myItem.getDescription().getValue() + " value " +  myItem.getNumPrt().getValue());
+                    }
+                }
+            }
+            );
+
+            return cell;
+        }
+        );
+
+        tcKpiTktsOpen.setCellValueFactory(cellData -> cellData.getValue().getNumOpen().asObject());
+        tcKpiTktsOpen.setCellFactory(tc -> {
+            TableCell<KpiTblRow, Integer> cell = new TableCell<KpiTblRow, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : item.toString());
+                    if ((!empty) && (item != 0)) {
+                        this.getStyleClass().add("selCell");
+                    } else {
+                        this.getStyleClass().remove("selCall");
+                    }
+                }
+            };
+
+            cell.setOnMouseClicked(e
+                    -> {
+                if (!cell.isEmpty()) {
+                    TableRow<KpiTblRow> tblRow;
+                    tblRow = cell.getTableRow();
+                    KpiTblRow myItem = tblRow.getItem();
+                    if (myItem.getNumPrt().getValue() != 0) {
+                        dspDetailKpi(myItem.getDescription().getValue(), AppParms.OPN_STAT_NAME);
+                        // System.out.println("kpi mouse clicked " + myItem.getDescription().getValue() + " value " +  myItem.getNumPrt().getValue());
+                    }
+                }
+            }
+            );
+
+            return cell;
+        }
+        );
+        
         tcKpiTktsPctShip.setCellValueFactory(cellData -> cellData.getValue().getPctShp().asObject());
 
         tblKpi.setItems(kpiTblObvList);
@@ -1689,9 +1796,9 @@ public class FXMLDocumentController implements Initializable, ChangedFilterListe
                     col.setPrefWidth(60d);
                     tableSize = tableSize + 60d;
                 }
-               // System.out.println("columnName is " + col.getText() + " width = " + col.getPrefWidth());
+                // System.out.println("columnName is " + col.getText() + " width = " + col.getPrefWidth());
             }
-tableSize = tableSize + 30d;
+            tableSize = tableSize + 30d;
         }
         table.setPrefWidth(tableSize);
 

@@ -25,7 +25,7 @@ import static ptktData.AppParms.dec2ZoneDt;
  *
  * @author Khatchik
  */
-public class PtkCarton implements Comparable<PtkCarton> {
+public class PtkCarton implements Comparable<PtkCarton> , PtktIntr{
 
     private final BigDecimal crtnNo;
     private final BigDecimal ptktNo;
@@ -61,6 +61,7 @@ public class PtkCarton implements Comparable<PtkCarton> {
     private final String pkhDisF;
     private final Double orPrtTime;
     private LocalDate trgShipDt;
+    private final LocalDateTime prtDtTm;
     private int row;
 
     public PtkCarton(BigDecimal crtnNo, BigDecimal ptktNo, BigDecimal ordNo, String soldTo,
@@ -155,6 +156,12 @@ public class PtkCarton implements Comparable<PtkCarton> {
             }
         }
         calctrgShipDt();
+        DecimalFormat dec8 = new DecimalFormat("00000000");
+        DecimalFormat dec6 = new DecimalFormat("000000");
+        String sPrtDtTime = dec8.format(this.prtDate)
+                + dec6.format(this.orPrtTime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        this.prtDtTm=LocalDateTime.parse(sPrtDtTime, formatter);
 
     }
      private void calctrgShipDt() {
@@ -366,6 +373,10 @@ public class PtkCarton implements Comparable<PtkCarton> {
 
     public Double getOrPrtTime() {
         return orPrtTime;
+    }
+
+    public LocalDateTime getPrtDtTm() {
+        return prtDtTm;
     }
     
     

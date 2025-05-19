@@ -113,7 +113,7 @@ public class PickTicketDetailController implements Initializable {
 
     @FXML
     private TableColumn<PtktDetailRow, String> tcWhse;
-     @FXML
+    @FXML
     private TableColumn<PtktDetailRow, Integer> tcOrPrl;
 
     @FXML
@@ -146,7 +146,7 @@ public class PickTicketDetailController implements Initializable {
 
     @FXML
     private TableColumn<PtktDetailRow, String> tcPrtTime;
-     @FXML
+    @FXML
     private TableColumn<PtktDetailRow, String> tcShipByDt;
 
     @FXML
@@ -160,6 +160,7 @@ public class PickTicketDetailController implements Initializable {
     private String fltrPrd;
     private String fltrStat;
     private String fltrPkr;
+    private String fltrKpiItem;
     private final String COL_PTKT_NO = "Pick Ticket";
     private final String COL_ORD_NO = "Order";
     private final String COL_SOLD_TO = "Sold To";
@@ -167,7 +168,7 @@ public class PickTicketDetailController implements Initializable {
     private final String COL_SHIP_TO_NAM = "Ship to Name";
     private final String COL_SHIP_VIA = "Ship Via";
     private final String COL_WHSE = "Whse";
-    private final String COL_ORPRL ="Price Level";
+    private final String COL_ORPRL = "Price Level";
     private final String COL_CTN_CNT = "Total Cartons";
     private final String COL_UNITS = "Units";
     private final String COL_DOLLARS = "Dollars";
@@ -184,7 +185,7 @@ public class PickTicketDetailController implements Initializable {
     private final String COL_ORD_TYP = "Order Type";
     private final String COL_PO_NO = "PO #";
     private final String COL_WEB_ORD = "Web Ord/Remarks";
-    private final String COL_TRG_SHIP_DATE ="Target Ship by Date";
+    private final String COL_TRG_SHIP_DATE = "Target Ship by Date";
     // private final String TEST = "test";
 
     @Override
@@ -216,6 +217,10 @@ public class PickTicketDetailController implements Initializable {
 
     public void setFltrPkr(String fltrPkr) {
         this.fltrPkr = fltrPkr;
+    }
+
+    public void setFltrKpiItem(String fltrKpiItem) {
+        this.fltrKpiItem = fltrKpiItem;
     }
 
     public void loadDtlDsp() {
@@ -255,9 +260,9 @@ public class PickTicketDetailController implements Initializable {
                         ptktRec.getStgDatTm(),
                         ptktRec.getCrtnCnt(),
                         ptktRec.getPoNo(),
-                        ptktRec.getWebOrd()
-                        ,ptktRec.getOrPrl()
-                        ,ptktRec.getTrgShipDt()
+                        ptktRec.getWebOrd(),
+                        ptktRec.getOrPrl(),
+                        ptktRec.getTrgShipDt()
                 ));
                 totU = totU.add(ptktRec.getTotu());
                 totD = totD.add(ptktRec.getTotd());
@@ -346,7 +351,7 @@ public class PickTicketDetailController implements Initializable {
         tcStrDt.setCellValueFactory(cellData -> cellData.getValue().getOrStrDt());
         tcCmpDt.setCellValueFactory(cellData -> cellData.getValue().getOrCmpDt());
         tcPrtDt.setCellValueFactory(cellData -> cellData.getValue().getPrtDate());
-        tcShipByDt.setCellValueFactory(cellData->cellData.getValue().getTrgShpBy());
+        tcShipByDt.setCellValueFactory(cellData -> cellData.getValue().getTrgShpBy());
         tcPrtTime.setCellValueFactory(cellData -> cellData.getValue().getPrtTime());
 
         tblPtkDtl.setItems(ptktDetailRow);
@@ -388,6 +393,7 @@ public class PickTicketDetailController implements Initializable {
             ptktDtlCrtnCtl.setFltrStat(" ");
             ptktDtlCrtnCtl.setFltrPkr(AppParms.ALL);
             ptktDtlCrtnCtl.setFltrPtk(ptkNo);
+            ptktDtlCrtnCtl.setFltrKpiItem("");
             ptktDtlCrtnCtl.setPtktsum(ptktsum);
 
             ptktDtlCrtnCtl.bldCrtnDspl();
@@ -419,14 +425,25 @@ public class PickTicketDetailController implements Initializable {
                     result = false;
                 }
             } else {
-                if (!ptktRec.getStatus().trim().equals(fltrStat)) {
+                if (fltrStat.equals(AppParms.OPN_STAT_NAME) ){
+                    if ( ptktRec.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
                     result = false;
+                    }
+                } else {
+                    if (!ptktRec.getStatus().trim().equals(fltrStat)) {
+                        result = false;
+                    }
                 }
             }
         }
 
         if (!AppParms.ALL.equals(fltrPkr)) {
-            if (!ptktRec.getPkrOpr().equals(fltrPkr)) {
+            if (!ptktRec.getPkrOpr().trim().equals(fltrPkr)) {
+                result = false;
+            }
+        }
+        if (fltrKpiItem.trim().length() > 0) {
+            if (!AppParms.kpiIsPckSel(fltrKpiItem, ptktRec)) {
                 result = false;
             }
         }
@@ -484,21 +501,21 @@ public class PickTicketDetailController implements Initializable {
         datCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yy"));
 
         tblCol = tblPtkDtl.getColumns();
-        Calendar wDate = Calendar.getInstance();
+        //Calendar wDate = Calendar.getInstance();
         //  Calendar wStatDt = Calendar.getInstance();
         String stTime;
-        String sDate;
-        String sTime;
+        // String sDate;
+        //String sTime;
         //String sUnits;
         //String sDollars;
         Double dUnits;
         Double dDollars;
-        int wYear;
-        int wMon;
-        int wDa;
-        int wHr;
-        int wMin;
-        int wSec;
+        //int wYear;
+        //int wMon;
+        //int wDa;
+        //int wHr;
+        //int wMin;
+        //int wSec;
 
         short colIx = 0;
         int rowIx = 0;
@@ -538,7 +555,7 @@ public class PickTicketDetailController implements Initializable {
                     setColWidth(sheet, colIx, 20);
                     break;
                 case COL_TRG_SHIP_DATE:
-                    setColWidth(sheet,colIx,20);
+                    setColWidth(sheet, colIx, 20);
                     break;
                 case COL_STAT_ST_DATE:
                     setColWidth(sheet, colIx, 20);

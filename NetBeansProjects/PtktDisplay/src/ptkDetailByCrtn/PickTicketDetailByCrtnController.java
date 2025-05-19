@@ -54,110 +54,111 @@ import org.apache.poi.ss.usermodel.*;
  * @author khatchik
  */
 public class PickTicketDetailByCrtnController implements Initializable {
-    
+
     @FXML
     private Button btnExport;
-    
+
     @FXML
     private Label lblPtkCnt;
-    
+
     @FXML
     private Label lblCtnCnt;
-    
+
     @FXML
     private Label lblTotU;
-    
+
     @FXML
     private Label lblTotD;
-    
+
     @FXML
     private TableView<PickTicketDetailByCartonRow> tblPtkDtl;
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcCrtn;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcPtkt;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcOrder;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcSoldTo;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcShipTo;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcCustNam;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcShpNam;
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcPoNo;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcWebOrd;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcOrTyp;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcShipVia;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcWhse;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Integer> tcSku;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcUnits;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcDollars;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcStat;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcCtnStat;
     @FXML
-    
+
     private TableColumn<PickTicketDetailByCartonRow, Double> tcStDat;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcStTim;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcCtnCmpDat;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcCtnCmpTim;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Long> tcDur;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, String> tcOpr;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcStrDt;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcCmpDt;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcPrtDt;
-    
+
     @FXML
     private TableColumn<PickTicketDetailByCartonRow, Double> tcPrtTime;
-    
+
     private PtktSum ptktsum;
     private String test;
     private String fltrPrd;
     private String fltrStat;
     private String fltrPkr;
     private String fltrPtk;
+    private String fltrKpiItem;
     private final String COL_CRTN_NO = "Carton";
     private final String COL_PTKT_NO = "Pick Ticket";
     private final String COL_ORD_NO = "Order";
@@ -249,6 +250,10 @@ public class PickTicketDetailByCrtnController implements Initializable {
         this.fltrPtk = fltrPtk;
     }
 
+    public void setFltrKpiItem(String fltrKpiItem) {
+        this.fltrKpiItem = fltrKpiItem;
+    }
+
     /**
      * display Carton Detail Display
      */
@@ -266,7 +271,7 @@ public class PickTicketDetailByCrtnController implements Initializable {
         NumberFormat currencyFormatter
                 = NumberFormat.getCurrencyInstance(enUSLocale);
         DecimalFormat numFormatter = new DecimalFormat("#,###");
-        
+
         for (PtkCarton ptkCrt : ptkCrtnList) {
             if (fltrPtktCrt(ptkCrt)) {
                 ptktCrtnDetailRow.add(new PickTicketDetailByCartonRow(ptkCrt));
@@ -286,7 +291,7 @@ public class PickTicketDetailByCrtnController implements Initializable {
         if (!ptktCrtnDetailRow.isEmpty()) {
             btnExport.setDisable(false);
         }
-        
+
         tcPtkt.setCellValueFactory(cellData -> cellData.getValue().getPtktNo());
         tcCrtn.setCellValueFactory(cellData -> cellData.getValue().getCrtnNo().asObject());
         tcCrtn.setCellFactory(col -> new TableCell<PickTicketDetailByCartonRow, Double>() {
@@ -503,16 +508,16 @@ public class PickTicketDetailByCrtnController implements Initializable {
                 }
             }
         });
-        
+
         tblPtkDtl.setItems(ptktCrtnDetailRow);
-        
+
     }
-    
+
     private boolean fltrPtktCrt(PtkCarton ptkCrt) {
-        
+
         boolean result = true;
         DecimalFormat fmtPtk = new DecimalFormat("0000000");
-        
+
         if (!" ".equals(fltrPtk) && !AppParms.ALL.equals(fltrPtk)) {
             if (!fmtPtk.format(ptkCrt.getPtktNo()).equals(fltrPtk)) {
                 result = false;
@@ -523,7 +528,7 @@ public class PickTicketDetailByCrtnController implements Initializable {
                 result = false;
             }
         }
-        
+
         if (!" ".equals(fltrStat)) {
             if (fltrStat.equals(AppParms.QUA_STAT_NAME)) {
                 if (!ptkCrt.getStatus().trim().equals(fltrStat)
@@ -531,37 +536,49 @@ public class PickTicketDetailByCrtnController implements Initializable {
                     result = false;
                 }
             } else {
-                if (!ptkCrt.getStatus().trim().equals(fltrStat)) {
-                    result = false;
+                if (fltrStat.equals(AppParms.OPN_STAT_NAME)) {
+                    if (ptkCrt.getStatus().trim().equals(AppParms.INV_STAT_NAME)) {
+                        result = false;
+                    }
+                } else {
+                    if (!ptkCrt.getStatus().trim().equals(fltrStat)) {
+                        result = false;
+                    }
                 }
             }
         }
-        
+
         if (!AppParms.ALL.equals(fltrPkr)) {
             if (!ptkCrt.getPkrOpr().equals(fltrPkr)) {
                 result = false;
             }
         }
-        
+
+        if (fltrKpiItem.trim().length() > 0) {
+            if (!AppParms.kpiIsPckSel(fltrKpiItem, ptkCrt)) {
+                result = false;
+            }
+        }
+
         return result;
     }
-    
+
     @FXML
     void btnExportClicked(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Excel Files", "*.XLS"));
-        
+
         fc.setTitle("Choose Export File");
-        
+
         File selFile = fc.showSaveDialog(null);
-        
+
         if (selFile != null) {
             System.out.println("file name is " + selFile.getAbsolutePath());
             exportPtktData(selFile);
         }
-        
+
     }
-    
+
     private void exportPtktData(File selFile) {
         ObservableList<TableColumn<PickTicketDetailByCartonRow, ?>> tblCol;
         ObservableList<PickTicketDetailByCartonRow> tblRows;
@@ -587,11 +604,11 @@ public class PickTicketDetailByCrtnController implements Initializable {
         dtlCellStyl.setBorderBottom(BorderStyle.THICK);
         dtlCellStyl.setFillForegroundColor(IndexedColors.BLACK.getIndex());
         dtlCellStyl.setFont(dtlFont);
-        
+
         CreationHelper createHelper = wb.getCreationHelper();
         CellStyle datCellStyle = wb.createCellStyle();
         datCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yy"));
-        
+
         tblCol = tblPtkDtl.getColumns();
         Calendar wDate = Calendar.getInstance();
         Calendar wStatDt = Calendar.getInstance();
@@ -610,7 +627,7 @@ public class PickTicketDetailByCrtnController implements Initializable {
         int wHr;
         int wMin;
         int wSec;
-        
+
         short colIx = 0;
         int rowIx = 0;
         Row row = sheet.createRow(rowIx++);
@@ -619,7 +636,7 @@ public class PickTicketDetailByCrtnController implements Initializable {
             Cell cell = row.createCell(colIx);
             cell.setCellValue(col.getText());
             cell.setCellStyle(hdrCellStyl);
-            
+
             switch (col.getText()) {
                 case COL_CRTN_NO:
                     setColWidth(sheet, colIx, 15);
@@ -680,9 +697,9 @@ public class PickTicketDetailByCrtnController implements Initializable {
                     break;
             }
             colIx++;
-            
+
         }
-        
+
         tblRows = tblPtkDtl.getItems();
         for (PickTicketDetailByCartonRow tr : tblRows) {
             row = sheet.createRow(rowIx++);
@@ -727,7 +744,7 @@ public class PickTicketDetailByCrtnController implements Initializable {
                 TableColumn<PickTicketDetailByCartonRow, ?> col = tblCol.get(colIx);
                 String tst = col.getText();
                 Cell cell = row.createCell(colIx);
-                
+
                 switch (col.getText()) {
                     case COL_CRTN_NO:
                         cell.setCellValue(tr.getCrtnNo().getValue());
@@ -834,7 +851,7 @@ public class PickTicketDetailByCrtnController implements Initializable {
             selFile = new File(sFileName.trim() + ".XLS");
         }
         boolean done;
-        
+
         do {
             done = true;
             try {
@@ -853,41 +870,41 @@ public class PickTicketDetailByCrtnController implements Initializable {
                 Logger.getLogger(PickTicketDetailByCrtnController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while (!done);
-        
+
     }
-    
+
     private void setColWidth(Sheet sheet, int col, int charLen) {
         int width = ((int) (charLen * 1.14388)) * 256;
         sheet.setColumnWidth(col, width);
-        
+
     }
-    
+
     private Calendar str2Cal(String sDate) {
         Calendar res = Calendar.getInstance();
         int wYear;
         int wMon;
         int wDa;
-        
+
         wMon = Integer.valueOf(sDate.substring(0, 2));
         wDa = Integer.valueOf(sDate.substring(3, 5));
         wYear = Integer.valueOf(sDate.substring(6, 10));
         res.set(wYear, wMon - 1, wDa);
         return res;
     }
-    
+
     private String double2String(Double dDate) {
         DecimalFormat fmtDat8 = new DecimalFormat("00000000");
         String sDat8 = fmtDat8.format(dDate);
-        
+
         return fmtDate(sDat8);
     }
-    
+
     private String fmtDate(String sDat8) {
         String rtnDat = sDat8.substring(0, 4)
                 + "/" + sDat8.substring(4, 6)
                 + "/" + sDat8.substring(6, 8);
-        
+
         return rtnDat;
     }
-    
+
 }
